@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "604486127004",
+    "project_id": "autopark-2a8b9",
+    "storage_bucket": "autopark-2a8b9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:604486127004:android:d3b0f367fd56f7e4364c59",
+        "android_client_info": {
+          "package_name": "com.example.autopark_appmovil"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATp65txvxEOTgyW-RRJ_rHJwM49a_U3R4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
