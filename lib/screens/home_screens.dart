@@ -1,4 +1,5 @@
 
+import 'package:autopark_appmovil/screens/parking_screen.dart';
 import 'package:flutter/material.dart'; // Importa la pantalla de tarifas
 
 
@@ -92,8 +93,18 @@ class HomeScreen extends StatelessWidget {
               subtitle: '8 Cebros Gonçalves',
               icon: Icons.event_available,
               color: Colors.orange,
-              
+              onPressed: () {
+                print('Navegando...............');
+                // Navegar a ParkingScreen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ParkingScreen(espacioId: 'espacio_1'), // Pasa el parámetro necesario
+                  ),
+                );
+              },
             ),
+
             _buildCard(
               title: 'Estabilidad',
               subtitle: '7 t = 31 ms',
