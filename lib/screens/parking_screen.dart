@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:autopark_appmovil/services/realtime_db_services.dart';
+import 'package:provider/provider.dart';
 
 class ParkingScreen extends StatelessWidget {
   final String espacioId;

@@ -1,7 +1,5 @@
-
 import 'package:autopark_appmovil/screens/parking_screen.dart';
 import 'package:flutter/material.dart'; // Importa la pantalla de tarifas
-
 
 void main() {
   runApp(MyApp());
@@ -79,18 +77,16 @@ class HomeScreen extends StatelessWidget {
               subtitle: '10.50 s/m',
               icon: Icons.attach_money,
               color: Colors.blue,
-              
             ),
             _buildCard(
               title: 'Agregar Lugares',
               subtitle: '15 Cajones Actualmente',
               icon: Icons.add_location,
               color: Colors.green,
-              
             ),
             _buildCard(
               title: 'Disponibilidad Actual',
-              subtitle: '8 Cebros Gonçalves',
+              subtitle: 'Espacios Disponibles',
               icon: Icons.event_available,
               color: Colors.orange,
               onPressed: () {
@@ -99,25 +95,23 @@ class HomeScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ParkingScreen(espacioId: 'espacio_1'), // Pasa el parámetro necesario
+                    builder: (context) => const ParkingScreen(
+                        espacioId: 'espacio_1'), // Pasa el parámetro necesario
                   ),
                 );
               },
             ),
-
             _buildCard(
               title: 'Estabilidad',
               subtitle: '7 t = 31 ms',
               icon: Icons.trending_up,
               color: Colors.purple,
-              
             ),
             _buildCard(
               title: 'Gestionar Reservas',
               subtitle: '6 Reservas',
               icon: Icons.calendar_today,
               color: Colors.red,
-             
             ),
           ],
         ),

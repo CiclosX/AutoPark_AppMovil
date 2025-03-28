@@ -26,6 +26,7 @@ class MainApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Firebase CRUD',
         home: WelcomeScreen(),
+        //home: WelcomeScreen(),
       ),
     );
   }
