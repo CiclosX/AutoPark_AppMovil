@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:autopark_appmovil/screens/parking_screen.dart';
+import 'package:autopark_appmovil/screens/parking_owner_screen.dart';
+import 'package:autopark_appmovil/screens/no_data_found_screen.dart'; // Agregar la importación de la pantalla NoDataFoundScreen
 
-class ParkingOverviewScreen extends StatefulWidget {
-  const ParkingOverviewScreen({super.key});
+class FloorOverviewScreen extends StatefulWidget {
+  const FloorOverviewScreen({super.key});
 
   @override
-  _ParkingOverviewScreenState createState() => _ParkingOverviewScreenState();
+  _FloorOverviewScreenState createState() => _FloorOverviewScreenState();
 }
 
-class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
-  List<Map<String, dynamic>> espacios = [
-    {'id': 'espacio_1', 'nombre': 'Espacio 1', 'cajones': 15, 'color': Colors.blue},
-    {'id': 'espacio_2', 'nombre': 'Espacio 2', 'cajones': 10, 'color': Colors.blue},
-    {'id': 'espacio_3', 'nombre': 'Espacio 3', 'cajones': 8, 'color': Colors.blue},
+class _FloorOverviewScreenState extends State<FloorOverviewScreen> {
+  List<Map<String, dynamic>> pisos = [
+    {'id': 'piso_1', 'nombre': 'Piso 1', 'color': Colors.green},
+    {'id': 'piso_2', 'nombre': 'Piso 2', 'color': Colors.blue},
+    {'id': 'piso_3', 'nombre': 'Piso 3', 'color': Colors.orange},
   ];
 
-  void _agregarEspacio() {
+  void _agregarPiso() {
     TextEditingController nombreController = TextEditingController();
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Agregar Espacio"),
+          title: const Text("Agregar Piso"),
           content: TextField(
             controller: nombreController,
-            decoration: const InputDecoration(hintText: "Nombre del espacio"),
+            decoration: const InputDecoration(hintText: "Nombre del piso"),
           ),
           actions: [
             TextButton(
@@ -34,10 +35,11 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  espacios.add({
-                    'id': 'espacio_${espacios.length + 1}',
-                    'nombre': nombreController.text.isNotEmpty ? nombreController.text : 'Espacio ${espacios.length + 1}',
-                    'cajones': 5,
+                  pisos.add({
+                    'id': 'piso_${pisos.length + 1}',
+                    'nombre': nombreController.text.isNotEmpty
+                        ? nombreController.text
+                        : 'Piso ${pisos.length + 1}',
                     'color': Colors.blue,
                   });
                 });
@@ -51,16 +53,16 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
     );
   }
 
-  void _editarEspacio(int index) {
-    TextEditingController nombreController = TextEditingController(text: espacios[index]['nombre']);
+  void _editarPiso(int index) {
+    TextEditingController nombreController = TextEditingController(text: pisos[index]['nombre']);
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Editar Espacio"),
+          title: const Text("Editar Piso"),
           content: TextField(
             controller: nombreController,
-            decoration: const InputDecoration(hintText: "Nuevo nombre del espacio"),
+            decoration: const InputDecoration(hintText: "Nuevo nombre del piso"),
           ),
           actions: [
             TextButton(
@@ -70,7 +72,7 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  espacios[index]['nombre'] = nombreController.text;
+                  pisos[index]['nombre'] = nombreController.text;
                 });
                 Navigator.pop(context);
               },
@@ -82,13 +84,13 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
     );
   }
 
-  void _eliminarEspacio(int index) {
+  void _eliminarPiso(int index) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text("Confirmar Eliminación"),
-          content: const Text("¿Estás seguro de que deseas eliminar este espacio?"),
+          content: const Text("¿Estás seguro de que deseas eliminar este piso?"),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -97,7 +99,7 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  espacios.removeAt(index);
+                  pisos.removeAt(index);
                 });
                 Navigator.pop(context);
               },
@@ -109,12 +111,33 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
     );
   }
 
+  void _onPisoClicked(int index) {
+    if (pisos[index]['nombre'] == 'Piso 1') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ParkingOverviewScreen(
+          ),
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => NoDataFoundScreen(
+            pisoNombre: pisos[index]['nombre'],
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Lugares',
+          'Pisos',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.blue[800],
@@ -122,7 +145,7 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add, color: Colors.white),
-            onPressed: _agregarEspacio,
+            onPressed: _agregarPiso,
           ),
         ],
       ),
@@ -131,24 +154,16 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(espacios.length, (index) {
+          children: List.generate(pisos.length, (index) {
             return _buildCard(
               context: context,
               index: index,
-              title: ' ${espacios[index]['nombre']}',
+              title: pisos[index]['nombre'],
               subtitle: 'Ver más detalles',
-              icon: Icons.local_parking,
-              color: espacios[index]['color'],
+              icon: Icons.location_on,
+              color: pisos[index]['color'],
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ParkingScreen(
-                      espacioId: espacios[index]['id'],
-                      espacioNombre: espacios[index]['nombre'],
-                    ),
-                  ),
-                );
+                _onPisoClicked(index); // Llamamos a _onPisoClicked
               },
             );
           }),
@@ -156,7 +171,6 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
       ),
     );
   }
-
 
   Widget _buildCard({
     required BuildContext context,
@@ -210,11 +224,11 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.edit, color: Colors.blue),
-                    onPressed: () => _editarEspacio(index),
+                    onPressed: () => _editarPiso(index),
                   ),
                   IconButton(
                     icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => _eliminarEspacio(index),
+                    onPressed: () => _eliminarPiso(index),
                   ),
                 ],
               ),

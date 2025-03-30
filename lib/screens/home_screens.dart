@@ -1,4 +1,4 @@
-import 'package:autopark_appmovil/screens/parking_owner_screen.dart';
+import 'package:autopark_appmovil/screens/floor_overview_screen.dart';
 import 'package:flutter/material.dart'; // Importa la pantalla de tarifas
 
 void main() {
@@ -93,13 +93,12 @@ class HomeScreen extends StatelessWidget {
               icon: Icons.event_available,
               color: Colors.orange,
               onPressed: () {
-                print('Navegando...............');
                 // Navegar a ParkingScreen
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        const ParkingOverviewScreen(), // Pasa el parámetro necesario
+                        const FloorOverviewScreen(), // Pasa el parámetro necesario
                   ),
                 );
               },
