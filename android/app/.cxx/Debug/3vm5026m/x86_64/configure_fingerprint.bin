@@ -2,6 +2,7 @@ C/C++ Structured LogK
 I
 GC:\flutter\packages\flutter_tools\gradle\src\main\groovy\CMakeLists.txtC
 A
+<<<<<<< HEAD
 ?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	ÌÆðÜ2§ Äó¡¤Û2k
 i
 gC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86_64\additional_project_files.txt	ÌÆðÜ2 ÅÅ‘ÈÜ2h
@@ -26,3 +27,29 @@ _
 ]C:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86_64\prefab_config.json	ÌÆðÜ2( ßÅ‘ÈÜ2f
 d
 bC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86_64\symbol_folder_index.txt	ÌÆðÜ2Y ßÅ‘ÈÜ2
+=======
+?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	¾ç¯§Ý2§ Äó¡¤Û2k
+i
+gC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86_64\additional_project_files.txt	¾ç¯§Ý2 ÅÅ‘ÈÜ2h
+f
+dC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86_64\android_gradle_build.json	¾ç¯§Ý2° ÉÅ‘ÈÜ2m
+k
+iC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86_64\android_gradle_build_mini.json	¾ç¯§Ý2‡ ÙÅ‘ÈÜ2Z
+X
+VC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86_64\build.ninja	¾ç¯§Ý2ÌØ €Ä‘ÈÜ2^
+\
+ZC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86_64\build.ninja.txt	¾ç¯§Ý2c
+a
+_C:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86_64\build_file_index.txt	¾ç¯§Ý2G àÅ‘ÈÜ2d
+b
+`C:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86_64\compile_commands.json	¾ç¯§Ý2	h
+f
+dC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86_64\compile_commands.json.bin	¾ç¯§Ý2
+n
+l
+jC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86_64\metadata_generation_command.txt	¾ç¯§Ý2Á ÞÅ‘ÈÜ2a
+_
+]C:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86_64\prefab_config.json	¾ç¯§Ý2( ßÅ‘ÈÜ2f
+d
+bC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86_64\symbol_folder_index.txt	¾ç¯§Ý2Y ßÅ‘ÈÜ2
+>>>>>>> a74295f09c14902a558fcb456610aeb31530e25e

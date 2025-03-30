@@ -2,6 +2,7 @@ C/C++ Structured LogK
 I
 GC:\flutter\packages\flutter_tools\gradle\src\main\groovy\CMakeLists.txtC
 A
+<<<<<<< HEAD
 ?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	…ÆðÜ2§ Äó¡¤Û2h
 f
 dC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86\additional_project_files.txt	…ÆðÜ2 ­±‘ÈÜ2e
@@ -26,3 +27,29 @@ gC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86\metadat
 ZC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86\prefab_config.json	…ÆðÜ2( ·±‘ÈÜ2c
 a
 _C:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86\symbol_folder_index.txt	…ÆðÜ2V ¸±‘ÈÜ2
+=======
+?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	µæ¯§Ý2§ Äó¡¤Û2h
+f
+dC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86\additional_project_files.txt	µæ¯§Ý2 ­±‘ÈÜ2e
+c
+aC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86\android_gradle_build.json	µæ¯§Ý2ª ±±‘ÈÜ2j
+h
+fC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86\android_gradle_build_mini.json	µæ¯§Ý2 µ±‘ÈÜ2W
+U
+SC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86\build.ninja	µæ¯§Ý2½Ø ›°‘ÈÜ2[
+Y
+WC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86\build.ninja.txt	µæ¯§Ý2`
+^
+\C:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86\build_file_index.txt	µæ¯§Ý2G º±‘ÈÜ2a
+_
+]C:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86\compile_commands.json	¶æ¯§Ý2	e
+c
+aC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86\compile_commands.json.bin	¶æ¯§Ý2
+k
+i
+gC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86\metadata_generation_command.txt	¶æ¯§Ý2² ¶±‘ÈÜ2^
+\
+ZC:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86\prefab_config.json	¶æ¯§Ý2( ·±‘ÈÜ2c
+a
+_C:\integradora5to\autopark_appmovil\android\app\.cxx\Debug\3vm5026m\x86\symbol_folder_index.txt	¶æ¯§Ý2V ¸±‘ÈÜ2
+>>>>>>> a74295f09c14902a558fcb456610aeb31530e25e
