@@ -1,2 +1,0 @@
-C:/Users/izumi/OneDrive/Documentos/GitHub/AutoPark_AppMovil/android/app/.cxx/Debug/4n4b6n57/armeabi-v7a/CMakeFiles/edit_cache.dir
-C:/Users/izumi/OneDrive/Documentos/GitHub/AutoPark_AppMovil/android/app/.cxx/Debug/4n4b6n57/armeabi-v7a/CMakeFiles/rebuild_cache.dir

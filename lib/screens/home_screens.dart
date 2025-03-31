@@ -1,9 +1,10 @@
 import 'package:autopark_appmovil/screens/parking_screen.dart';
 import 'package:autopark_appmovil/screens/capacidad_screen.dart';
+import 'package:autopark_appmovil/screens/floor_overview_screen.dart';
 import 'package:flutter/material.dart'; // Importa la pantalla de tarifas
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.grey[100],
       ),
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }
@@ -104,13 +105,12 @@ class HomeScreen extends StatelessWidget {
               icon: Icons.event_available,
               color: Colors.orange,
               onPressed: () {
-                print('Navegando...............');
                 // Navegar a ParkingScreen
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ParkingScreen(
-                        espacioId: 'espacio_1'), // Pasa el parámetro necesario
+                    builder: (context) =>
+                        const FloorOverviewScreen(), // Pasa el parámetro necesario
                   ),
                 );
               },
