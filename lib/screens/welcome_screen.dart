@@ -11,7 +11,7 @@ class WelcomeScreen extends StatelessWidget {
         // Fondo con imagen
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/carro.jpg'), // Ruta de la imagen
+            image: AssetImage('assets/img/carro.jpg'), // Ruta de la imagen
             fit: BoxFit.cover, // Ajusta la imagen para cubrir toda la pantalla
           ),
         ),
