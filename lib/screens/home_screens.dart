@@ -1,4 +1,3 @@
-import 'package:autopark_appmovil/screens/parking_screen.dart';
 import 'package:autopark_appmovil/screens/capacidad_screen.dart';
 import 'package:autopark_appmovil/screens/floor_overview_screen.dart';
 import 'package:flutter/material.dart'; // Importa la pantalla de tarifas
