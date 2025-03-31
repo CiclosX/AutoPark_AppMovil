@@ -11,98 +11,105 @@ class FloorOverviewScreen extends StatefulWidget {
   // ignore: library_private_types_in_public_api
   _FloorOverviewScreenState createState() => _FloorOverviewScreenState();
 }
-
 class _FloorOverviewScreenState extends State<FloorOverviewScreen> {
   final FirestoreServices _firestoreServices = FirestoreServices();
 
   // Método para agregar un nuevo piso
   void _agregarPiso() {
-    TextEditingController nombreController = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Agregar Piso"),
-          content: TextField(
-            controller: nombreController,
-            decoration: const InputDecoration(hintText: "Nombre del piso"),
+  TextEditingController nombreController = TextEditingController();
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text("Agregar Piso"),
+        content: TextField(
+          controller: nombreController,
+          decoration: const InputDecoration(hintText: "Nombre del piso"),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancelar"),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancelar"),
-            ),
-            TextButton(
-              onPressed: () async {
-                if (nombreController.text.isNotEmpty) {
-                  await _firestoreServices.agregarPiso(nombreController.text);
-                }
-                Navigator.pop(context);
-              },
-              child: const Text("Agregar"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+          TextButton(
+            onPressed: () async {
+              if (nombreController.text.isNotEmpty) {
+                // Pasar el mapa con el nombre del piso
+                await _firestoreServices.agregarPiso('piso', {
+                  'nombre': nombreController.text,
+                });
+              }
+              Navigator.pop(context);
+            },
+            child: const Text("Agregar"),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   // Método para editar un piso
   void _editarPiso(FloorModel piso) {
-    TextEditingController nombreController = TextEditingController(text: piso.nombre);
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Editar Piso"),
-          content: TextField(
-            controller: nombreController,
-            decoration: const InputDecoration(hintText: "Nuevo nombre del piso"),
+  TextEditingController nombreController = TextEditingController(text: piso.nombre);
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text("Editar Piso"),
+        content: TextField(
+          controller: nombreController,
+          decoration: const InputDecoration(hintText: "Nuevo nombre del piso"),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancelar"),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancelar"),
-            ),
-            TextButton(
-              onPressed: () async {
-                await _firestoreServices.editarPiso(piso.id, nombreController.text);
-                // ignore: use_build_context_synchronously
-                Navigator.pop(context);
-              },
-              child: const Text("Guardar"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+          TextButton(
+            onPressed: () async {
+              // Pasar el docId y los datos para editar el piso
+              await _firestoreServices.editarPiso('piso', piso.id, {
+                'nombre': nombreController.text, // Actualizar el nombre
+              });
+              Navigator.pop(context);
+            },
+            child: const Text("Guardar"),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   // Método para eliminar un piso
   void _eliminarPiso(FloorModel piso) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Confirmar Eliminación"),
-          content: const Text("¿Estás seguro de que deseas eliminar este piso?"),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancelar"),
-            ),
-            TextButton(
-              onPressed: () async {
-                await _firestoreServices.eliminarPiso(piso.id);
-                Navigator.pop(context);
-              },
-              child: const Text("Eliminar"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text("Confirmar Eliminación"),
+        content: const Text("¿Estás seguro de que deseas eliminar este piso?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancelar"),
+          ),
+          TextButton(
+            onPressed: () async {
+              await _firestoreServices.eliminarPiso('piso', piso.id); // Pasar la colección y el docId
+              Navigator.pop(context);
+            },
+            child: const Text("Eliminar"),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   // Método para manejar el clic en un piso
   void _onPisoClicked(FloorModel piso) {

@@ -1,4 +1,5 @@
 import 'package:autopark_appmovil/models/estacionamiento_model.dart';
+import 'package:autopark_appmovil/models/floor_model.dart';
 import 'package:autopark_appmovil/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -125,11 +126,29 @@ class FirestoreServices {
         .update({'ubicacion': ubicacion});
   }
 
-  obtenerPisos() {}
 
-  eliminarPiso(String id) {}
+  Stream <List<FloorModel>>obtenerPisos() {
+    return _firestore.collection('piso').snapshots().map((snapshot) {
+      return snapshot.docs
+          .map((doc) => FloorModel.fromDocumentSnapshot(doc))
+          .toList();
+    });
+  }
 
-  editarPiso(String id, String text) {}
+  Future<void>eliminarPiso(String collection, String docId) {
+    return _firestore.collection(collection).doc(docId).delete();
+  }
 
-  agregarPiso(String text) {}
+  Future<void> agregarPiso(String collection, Map<String, dynamic> data) {
+    return _firestore.collection(collection).add(data);
+  }
+
+  Future<void> editarPiso(String collection, String docId, Map<String, dynamic> data) {
+    return _firestore.collection(collection).doc(docId).update(data);
+  }
+
+
 }
+
+
+
