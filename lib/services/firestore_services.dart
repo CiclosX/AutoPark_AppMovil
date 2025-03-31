@@ -124,4 +124,12 @@ class FirestoreServices {
         .doc(estacionamientoId)
         .update({'ubicacion': ubicacion});
   }
+
+  obtenerPisos() {}
+
+  eliminarPiso(String id) {}
+
+  editarPiso(String id, String text) {}
+
+  agregarPiso(String text) {}
 }
