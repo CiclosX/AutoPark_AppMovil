@@ -1,0 +1,2 @@
+C:/Users/Hola/Documents/GitHub/AutoPark_AppMovil/android/app/.cxx/Debug/3p36o305/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/Hola/Documents/GitHub/AutoPark_AppMovil/android/app/.cxx/Debug/3p36o305/armeabi-v7a/CMakeFiles/rebuild_cache.dir

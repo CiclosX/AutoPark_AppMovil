@@ -2,7 +2,7 @@ import 'package:autopark_appmovil/screens/parking_owner_screen.dart';
 import 'package:flutter/material.dart'; // Importa la pantalla de tarifas
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.grey[100],
       ),
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }

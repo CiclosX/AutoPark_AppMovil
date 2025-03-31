@@ -18,6 +18,7 @@ class _UsersScreenState extends State<UsersScreen> {
   final TextEditingController _telefonoController = TextEditingController();
   final TextEditingController _tipoController = TextEditingController();
 
+  @override
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
