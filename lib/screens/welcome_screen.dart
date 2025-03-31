@@ -4,9 +4,9 @@ class WelcomeScreen extends StatelessWidget {
   final String userName;
 
   const WelcomeScreen({
-    Key? key,
+    super.key,
     required this.userName,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class WelcomeScreen extends StatelessWidget {
             child: ClipPath(
               clipper: WaveClipper(),
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.blue,
                 ),
               ),
@@ -60,10 +60,11 @@ class WelcomeScreen extends StatelessWidget {
                     border: Border.all(color: Colors.white, width: 2),
                     boxShadow: [
                       BoxShadow(
+                        // ignore: deprecated_member_use
                         color: Colors.black.withOpacity(0.2),
                         spreadRadius: 2,
                         blurRadius: 4,
-                        offset: Offset(0, 2),
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
@@ -79,7 +80,7 @@ class WelcomeScreen extends StatelessWidget {
 
               // Mensaje de bienvenida
               const SizedBox(height: 24),
-              Text(
+              const Text(
                 'Bienvenido',
                 style: TextStyle(
                   color: Colors.white,
@@ -91,7 +92,7 @@ class WelcomeScreen extends StatelessWidget {
               // Nombre de usuario
               Text(
                 userName,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -112,7 +113,7 @@ class WelcomeScreen extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: Colors.blue,
-                    minimumSize: Size(double.infinity, 50),
+                    minimumSize: const Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),
@@ -151,10 +152,14 @@ class WaveClipper extends CustomClipper<Path> {
         firstEndPoint.dx, firstEndPoint.dy);
 
     final secondControlPoint = Offset(size.width * 0.3, size.height * 0.25);
-    final secondEndPoint = Offset(0, 0);
-    path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
-        secondEndPoint.dx, secondEndPoint.dy);
-
+    const secondEndPoint = Offset(0, 0);
+    path.quadraticBezierTo(
+      secondControlPoint.dx, 
+      secondControlPoint.dy, 
+      secondEndPoint.dx, 
+      secondEndPoint.dy
+    );
+    
     path.close();
     return path;
   }
