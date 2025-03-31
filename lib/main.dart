@@ -1,3 +1,4 @@
+import 'package:autopark_appmovil/screens/home_screens.dart';
 import 'package:autopark_appmovil/services/realtime_db_services.dart';
 import 'package:autopark_appmovil/screens/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,16 +18,19 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // Usamos Provider directamente en lugar de ChangeNotifierProvider
         Provider<RealtimeDbService>(
           create: (_) => RealtimeDbService(),
         ),
       ],
-      child: const MaterialApp(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Firebase CRUD',
-        home: WelcomeScreen(),
-        //home: WelcomeScreen(),
+        title: 'AutoPark',
+        home: const WelcomeScreen(
+            userName: 'Juanito'), // Pasa el nombre de usuario aquí
+        routes: {
+          '/home': (context) =>
+              HomeScreen() // Reemplaza con tu página principal
+        },
       ),
     );
   }

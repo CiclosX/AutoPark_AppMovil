@@ -1,3 +1,4 @@
+import 'package:autopark_appmovil/screens/capacidad_screen.dart';
 import 'package:autopark_appmovil/screens/floor_overview_screen.dart';
 import 'package:flutter/material.dart'; // Importa la pantalla de tarifas
 
@@ -73,10 +74,23 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             _buildCard(
-              title: 'Tarifa de conocimiento',
-              subtitle: '10.50 s/m',
+              title: 'Estacionamiento',
+              subtitle: 'Tarifas y Espacios',
               icon: Icons.attach_money,
               color: Colors.blue,
+              onPressed: () {
+                print('Navegando a estacionamiento...............');
+                // Navegar a CapacidadScreen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CapacidadScreen(
+                      estacionamientoId: 'Estacionamiento', // Pasa el parámetro necesario
+                      // Pasa el parámetro necesario
+                    ),
+                  ),
+                );
+              },
             ),
             _buildCard(
               title: 'Agregar Lugares',
