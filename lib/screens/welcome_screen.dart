@@ -24,7 +24,7 @@ class WelcomeScreen extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          
+
           // Contenedor con forma de onda azul
           Positioned(
             top: MediaQuery.of(context).size.height * 0.35,
@@ -40,14 +40,14 @@ class WelcomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Contenido principal (logo, texto y botón)
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Espacio para que el contenido caiga debajo de la imagen
               SizedBox(height: MediaQuery.of(context).size.height * 0.35),
-              
+
               // Logo de estacionamiento
               Padding(
                 padding: const EdgeInsets.all(24.0),
