@@ -1,4 +1,3 @@
-// estacionamiento_model.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EstacionamientoModel {
@@ -16,6 +15,15 @@ class EstacionamientoModel {
     required this.ubicacion,
   });
 
+  Map<String, dynamic> toMap() {
+    return {
+      'capacidad': capacidad,
+      'horario': horario,
+      'tarifa': tarifa,
+      'ubicacion': ubicacion,
+    };
+  }
+
   factory EstacionamientoModel.fromDocumentSnapshot(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return EstacionamientoModel(
@@ -27,12 +35,4 @@ class EstacionamientoModel {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'capacidad': capacidad,
-      'horario': horario,
-      'tarifa': tarifa,
-      'ubicacion': ubicacion,
-    };
-  }
 }
