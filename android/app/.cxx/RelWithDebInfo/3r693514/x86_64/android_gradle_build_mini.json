@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "C:\\flutter\\packages\\flutter_tools\\gradle\\src\\main\\groovy\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "C:\\Users\\Brand\\AppData\\Local\\Android\\sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "C:\\Users\\Brand\\OneDrive\\Documents\\5 Cuatrimestre\\Integradora\\App_Movil\\App_movil\\AutoPark_AppMovil\\android\\app\\.cxx\\RelWithDebInfo\\3r693514\\x86_64",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "C:\\Users\\Brand\\AppData\\Local\\Android\\sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "C:\\Users\\Brand\\OneDrive\\Documents\\5 Cuatrimestre\\Integradora\\App_Movil\\App_movil\\AutoPark_AppMovil\\android\\app\\.cxx\\RelWithDebInfo\\3r693514\\x86_64",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

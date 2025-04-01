@@ -3,27 +3,45 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'profile'],
+  );
 
-  // --------------------------
-  // 1. Registro de Usuarios
-  // --------------------------
-  Future<UserCredential?> registerUser({
-    required String email,
-    required String password,
-  }) async {
+  // Iniciar sesión con Google
+  Future<UserCredential> signInWithGoogle() async {
     try {
-      return await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
+      // 1. Mostrar el selector de cuentas
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      
+      if (googleUser == null) {
+        throw Exception('No se seleccionó ninguna cuenta');
+      }
+
+      // 2. Obtener los detalles de autenticación
+      final GoogleSignInAuthentication googleAuth = 
+          await googleUser.authentication;
+
+      // 3. Crear credenciales
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
       );
-    } on FirebaseAuthException catch (e) {
-      throw Exception(_handleAuthError(e.code));
+
+      // 4. Iniciar sesión en Firebase
+      return await _firebaseAuth.signInWithCredential(credential);
+    } catch (e) {
+      print('Error en Google Sign-In: $e');
+      rethrow;
     }
   }
 
-  // --------------------------
-  // 2. Inicio de Sesión
-  // --------------------------
+  // Cerrar sesión
+  Future<void> signOut() async {
+    await _googleSignIn.signOut(); // Cerrar sesión en Google
+    await _firebaseAuth.signOut(); // Cerrar sesión en Firebase
+  }
+
+  // Método para email/contraseña (opcional)
   Future<UserCredential?> signInWithEmailAndPassword(
     String email, 
     String password,
@@ -34,75 +52,8 @@ class AuthService {
         password: password,
       );
     } on FirebaseAuthException catch (e) {
-      throw Exception(_handleAuthError(e.code));
-    }
-  }
-
-  // --------------------------
-  // 3. Autenticación con Google
-  // --------------------------
-  Future<UserCredential?> signInWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication? googleAuth = 
-          await googleUser?.authentication;
-      
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-
-      return await _firebaseAuth.signInWithCredential(credential);
-    } catch (e) {
-      throw Exception('Error al iniciar sesión con Google: $e');
-    }
-  }
-
-  // --------------------------
-  // 4. Recuperación de Contraseña
-  // --------------------------
-  Future<void> sendPasswordResetEmail(String email) async {
-    try {
-      await _firebaseAuth.sendPasswordResetEmail(email: email);
-    } on FirebaseAuthException catch (e) {
-      throw Exception(_handleAuthError(e.code));
-    }
-  }
-
-  // --------------------------
-  // 5. Cerrar Sesión
-  // --------------------------
-  Future<void> signOut() async {
-    try {
-      await _firebaseAuth.signOut();
-      await GoogleSignIn().signOut();
-    } catch (e) {
-      throw Exception('Error al cerrar sesión: $e');
-    }
-  }
-
-  // --------------------------
-  // 6. Obtener Usuario Actual
-  // --------------------------
-  User? getCurrentUser() {
-    return _firebaseAuth.currentUser;
-  }
-
-  // --------------------------
-  // 7. Manejo de Errores
-  // --------------------------
-  String _handleAuthError(String code) {
-    switch (code) {
-      case 'email-already-in-use':
-        return 'El correo ya está registrado';
-      case 'invalid-email':
-        return 'Correo electrónico inválido';
-      case 'user-not-found':
-        return 'Usuario no encontrado';
-      case 'wrong-password':
-        return 'Contraseña incorrecta';
-      default:
-        return 'Error de autenticación: $code';
+      print('Error: ${e.message}');
+      return null;
     }
   }
 }
