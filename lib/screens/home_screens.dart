@@ -1,4 +1,5 @@
 import 'package:autopark_appmovil/screens/floor_overview_screen.dart';
+import 'package:autopark_appmovil/screens/reservas_screen.dart';
 import 'package:autopark_appmovil/screens/tarifa_overview_screen.dart';
 import 'package:autopark_appmovil/screens/veiculos_screen.dart';
 import 'package:flutter/material.dart';
@@ -124,7 +125,7 @@ class HomeScreen extends StatelessWidget {
                   
                   // 2. Disponibilidad
                   _buildCard(
-                    title: 'Disponibilidad Actual',
+                    title: 'Disponibilidad ',
                     subtitle: 'Espacios Disponibles',
                     icon: Icons.event_available,
                     color: Colors.orange,
@@ -148,7 +149,7 @@ class HomeScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const VehiculosScreen(),
+                          builder: (context) => const ReservasScreen(),
                         ),
                       );
                     },
@@ -156,7 +157,7 @@ class HomeScreen extends StatelessWidget {
                   
                   // 4. Gestionar Reserva
                   _buildCard(
-                    title: 'Gestionar Reservas',
+                    title: 'Veiculos',
                     subtitle: 'Administrar reservaciones',
                     icon: Icons.edit_calendar,
                     color: Colors.purple,

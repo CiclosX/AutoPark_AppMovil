@@ -16,6 +16,8 @@ dependencies:
   intl: ^0.18.0
   table_calendar: ^3.0.0
   shared_preferences: ^2.2.2
+  firebase_auth: ^5.5.1
+  google_sign_in: ^6.3.0
 
 dev_dependencies:
   flutter_test:
