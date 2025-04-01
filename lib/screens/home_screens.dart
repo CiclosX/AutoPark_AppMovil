@@ -60,8 +60,6 @@ class HomeScreen extends StatelessWidget {
                   backgroundColor: Colors.white,
                   child: Icon(Icons.person, color: Colors.blue[800], size: 20),
                 ),
-                const SizedBox(width: 8),
-                const Text('Juaquin', style: TextStyle(color: Colors.white)),
               ],
             ),
           ],
