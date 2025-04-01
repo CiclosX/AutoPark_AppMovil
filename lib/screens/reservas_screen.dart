@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:intl/intl.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -101,7 +100,7 @@ class _ReservasScreenState extends State<ReservasScreen> {
               }
             },
             calendarStyle: CalendarStyle(
-              todayDecoration: BoxDecoration(
+              todayDecoration: const BoxDecoration(
                 color: Colors.blueAccent,
                 shape: BoxShape.circle,
               ),
@@ -109,7 +108,7 @@ class _ReservasScreenState extends State<ReservasScreen> {
                 color: Colors.blue[800],
                 shape: BoxShape.circle,
               ),
-              markerDecoration: BoxDecoration(
+              markerDecoration: const BoxDecoration(
                 color: Colors.red,
                 shape: BoxShape.circle,
               ),

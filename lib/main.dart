@@ -1,4 +1,5 @@
-import 'package:autopark_appmovil/screens/home_screens.dart';
+import 'package:autopark_appmovil/screens/signin_screen.dart';
+// import 'package:autopark_appmovil/screens/signin_screen.dart';
 import 'package:autopark_appmovil/services/realtime_db_services.dart';
 import 'package:autopark_appmovil/screens/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -29,7 +30,7 @@ class MainApp extends StatelessWidget {
             userName: 'Juanito'), // Pasa el nombre de usuario aquí
         routes: {
           '/home': (context) =>
-              HomeScreen() // Reemplaza con tu página principal
+              SigninScreen() // Reemplaza con tu página principal
         },
       ),
     );

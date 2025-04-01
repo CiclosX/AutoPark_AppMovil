@@ -18,7 +18,7 @@ class Vehiculo {
 }
 
 class VehiculosScreen extends StatefulWidget {
-  const VehiculosScreen({Key? key}) : super(key: key);
+  const VehiculosScreen({super.key});
 
   @override
   _VehiculosScreenState createState() => _VehiculosScreenState();
