@@ -1,33 +1,17 @@
 import 'package:autopark_appmovil/screens/floor_overview_screen.dart';
 import 'package:autopark_appmovil/screens/tarifa_overview_screen.dart';
 import 'package:autopark_appmovil/screens/veiculos_screen.dart';
+import 'package:autopark_appmovil/screens/signin_screen.dart'; // Importa la pantalla de login
+import 'package:autopark_appmovil/services/auth_services.dart'; // Importa el AuthService
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Bienvenido',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.grey[100],
-      ),
-      home: const HomeScreen(),
-    );
-  }
-}
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final AuthService _authService = AuthService();
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -39,6 +23,40 @@ class HomeScreen extends StatelessWidget {
             ),
             Row(
               children: [
+                // Botón de cerrar sesión
+                IconButton(
+                  icon: const Icon(Icons.logout, color: Colors.white),
+                  tooltip: 'Cerrar sesión',
+                  onPressed: () async {
+                    // Mostrar diálogo de confirmación
+                    bool confirm = await showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Cerrar sesión'),
+                        content: const Text('¿Estás seguro que deseas salir?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: const Text('Cancelar'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            child: const Text('Salir'),
+                          ),
+                        ],
+                      ),
+                    ) ?? false;
+
+                    if (confirm) {
+                      await _authService.signOut();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) =>  SigninScreen()),
+                      );
+                    }
+                  },
+                ),
+                const SizedBox(width: 8),
                 CircleAvatar(
                   radius: 16,
                   backgroundColor: Colors.white,
