@@ -116,8 +116,7 @@ class _FloorOverviewScreenState extends State<FloorOverviewScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const ParkingOverviewScreen(
-          ),
+          builder: (context) => const ParkingOverviewScreen(),
         ),
       );
     } else {

@@ -66,7 +66,8 @@ class HomeScreen extends StatelessWidget {
           children: [
             Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
                   color: Colors.blue[50],
@@ -105,6 +106,7 @@ class HomeScreen extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
+                  // 1. Estacionamiento
                   _buildCard(
                     title: 'Estacionamiento',
                     subtitle: 'Tarifas y Espacios',
@@ -121,20 +123,8 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
-                  _buildCard(
-                    title: 'Vehiculos',
-                    subtitle: 'Gestion de vehiculos',
-                    icon: Icons.directions_car,
-                    color: Colors.green,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const VehiculosScreen(),
-                        ),
-                      );
-                    },
-                  ),
+                  
+                  // 2. Disponibilidad
                   _buildCard(
                     title: 'Disponibilidad Actual',
                     subtitle: 'Espacios Disponibles',
@@ -149,17 +139,37 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
+                  
+                  // 3. Reservas
                   _buildCard(
-                    title: 'Estabilidad',
-                    subtitle: '7 t = 31 ms',
-                    icon: Icons.trending_up,
-                    color: Colors.purple,
-                  ),
-                  _buildCard(
-                    title: 'Gestionar Reservas',
+                    title: 'Reservas',
                     subtitle: '6 Reservas',
                     icon: Icons.calendar_today,
                     color: Colors.red,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const VehiculosScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  
+                  // 4. Gestionar Reserva
+                  _buildCard(
+                    title: 'Gestionar Reservas',
+                    subtitle: 'Administrar reservaciones',
+                    icon: Icons.edit_calendar,
+                    color: Colors.purple,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const VehiculosScreen(),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
