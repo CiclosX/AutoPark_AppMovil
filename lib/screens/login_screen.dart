@@ -1,80 +1,67 @@
 import 'package:flutter/material.dart';
+import '../services/auth_services.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
+
+  Future<void> _login() async {
+    try {
+      await _authService.signInWithEmailAndPassword(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+      // Navegar a la pantalla principal
+      Navigator.pushReplacementNamed(context, '/home');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    }
+  }
+
+  Future<void> _loginWithGoogle() async {
+    try {
+      await _authService.signInWithGoogle();
+      Navigator.pushReplacementNamed(context, '/home');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Iniciar Sesión')),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Hola',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+            TextField(
+              controller: _emailController,
+              decoration: InputDecoration(labelText: 'Correo'),
             ),
-            const SizedBox(height: 20),
-            const TextField(
-              decoration: InputDecoration(
-                labelText: 'Usuario',
-                hintText: 'Enter email',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            const TextField(
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(labelText: 'Contraseña'),
               obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Contraseña',
-                hintText: 'Enter password',
-                border: OutlineInputBorder(),
-              ),
             ),
-            const SizedBox(height: 10),
-            TextButton(
-              onPressed: () {
-                // Acción para "Olvidaste tu contraseña?"
-              },
-              child: const Text(
-                '¿Olvidaste tu contraseña?',
-                style: TextStyle(color: Colors.blue),
-              ),
-            ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                // Acción para "Entrar"
-              },
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-              ),
-              child: const Text('Entrar'),
+              onPressed: _login,
+              child: Text('Iniciar Sesión'),
             ),
-            const SizedBox(height: 10),
-            TextButton(
-              onPressed: () {
-                // Acción para "Crea una"
-              },
-              child: RichText(
-                text: const TextSpan(
-                  text: '¿No tienes cuenta? ',
-                  style: TextStyle(color: Colors.black),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: 'Crea una',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            ElevatedButton(
+              onPressed: _loginWithGoogle,
+              child: Text('Iniciar con Google'),
             ),
           ],
         ),
