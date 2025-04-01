@@ -35,7 +35,10 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
             children: [
               const Text(
                 "Agregar Nueva Tarifa",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 20),
               TextField(
@@ -73,7 +76,10 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text("Agregar", style: TextStyle(fontSize: 16)),
+                  child: const Text(
+                    "Agregar",
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -85,9 +91,8 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
   }
 
   void _editarTarifa(TarifaModel tarifa) {
-    TextEditingController tarifaController = TextEditingController(
-      text: tarifa.tarifa.toString(),
-    );
+    TextEditingController tarifaController =
+        TextEditingController(text: tarifa.tarifa.toString());
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -108,7 +113,10 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
             children: [
               const Text(
                 "Editar Tarifa",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 20),
               TextField(
@@ -178,35 +186,28 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
     );
   }
 
-  void eliminarTarifa(TarifaModel tarifa) {
+  void _eliminarTarifa(TarifaModel tarifa) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text("Confirmar Eliminación"),
           content: const Text(
-            "¿Estás seguro de que deseas eliminar esta tarifa?",
-          ),
+              "¿Estás seguro de que deseas eliminar esta tarifa?"),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text(
-                "Cancelar",
-                style: TextStyle(color: Colors.grey),
-              ),
+              child: const Text("Cancelar", style: TextStyle(color: Colors.grey)),
             ),
             TextButton(
               onPressed: () async {
                 await _firestoreServices.eliminarTarifa(tarifa.id);
                 Navigator.pop(context);
               },
-              child: const Text(
-                "Eliminar",
-                style: TextStyle(color: Colors.red),
-              ),
+              child: const Text("Eliminar", style: TextStyle(color: Colors.red)),
             ),
           ],
         );
@@ -224,7 +225,7 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.blue,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, size: 20),
@@ -237,18 +238,17 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
-
+          
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
-
+          
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text("No hay tarifas disponibles"));
           }
-
-          TarifaModel tarifa =
-              snapshot.data!.first; // Tomamos la primera tarifa para mostrar
-
+          
+          TarifaModel tarifa = snapshot.data!.first; // Tomamos la primera tarifa para mostrar
+          
           return Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
@@ -274,7 +274,10 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
                     children: [
                       const Text(
                         "La tarifa actual es de",
-                        style: TextStyle(fontSize: 18, color: Colors.black87),
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black87,
+                        ),
                       ),
                       const SizedBox(height: 10),
                       RichText(
@@ -301,9 +304,9 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
                     ],
                   ),
                 ),
-
+                
                 const SizedBox(height: 30),
-
+                
                 // Sección de pestañas
                 Container(
                   decoration: BoxDecoration(
@@ -331,20 +334,18 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               decoration: BoxDecoration(
-                                color:
-                                    _activeTab == 'Precio'
-                                        ? Colors.blue
-                                        : Colors.transparent,
+                                color: _activeTab == 'Precio'
+                                    ? Colors.blue
+                                    : Colors.transparent,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Center(
                                 child: Text(
                                   "Precio",
                                   style: TextStyle(
-                                    color:
-                                        _activeTab == 'Precio'
-                                            ? Colors.white
-                                            : Colors.black54,
+                                    color: _activeTab == 'Precio'
+                                        ? Colors.white
+                                        : Colors.black54,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -362,20 +363,18 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               decoration: BoxDecoration(
-                                color:
-                                    _activeTab == 'Tiempo'
-                                        ? Colors.blue
-                                        : Colors.transparent,
+                                color: _activeTab == 'Tiempo'
+                                    ? Colors.blue
+                                    : Colors.transparent,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Center(
                                 child: Text(
                                   "Tiempo",
                                   style: TextStyle(
-                                    color:
-                                        _activeTab == 'Tiempo'
-                                            ? Colors.white
-                                            : Colors.black54,
+                                    color: _activeTab == 'Tiempo'
+                                        ? Colors.white
+                                        : Colors.black54,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -387,9 +386,9 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
                     ),
                   ),
                 ),
-
+                
                 const SizedBox(height: 20),
-
+                
                 // Lista de tarifas
                 Expanded(
                   child: ListView.builder(
@@ -410,72 +409,65 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
                           ],
                         ),
                         child: ListTile(
-                          leading: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.blue,
-                            ),
-                            child: const Center(
-                              child: Text(
-                                "Editar",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          leading: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              GestureDetector(
+                                onTap: () => _editarTarifa(tarifa),
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.blue,
+                                  ),
+                                  child: const Icon(
+                                    Icons.edit,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
                                 ),
                               ),
-                            ),
+                              const SizedBox(width: 8),
+                              GestureDetector(
+                                onTap: () => _eliminarTarifa(tarifa),
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.red[50],
+                                    border: Border.all(color: Colors.red[100]!),
+                                  ),
+                                  child: Icon(
+                                    Icons.delete_outline,
+                                    color: Colors.red[400],
+                                    size: 20,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          title: Text(
-                            "\$${tarifa.tarifa.toStringAsFixed(2)}",
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                          title: Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text(
+                              "\$${tarifa.tarifa.toStringAsFixed(2)}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
                             ),
                           ),
                           trailing: const Text(
                             "Hora",
-                            style: TextStyle(color: Colors.grey),
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
                           ),
-                          onTap: () => _editarTarifa(tarifa),
                         ),
                       );
                     },
-                  ),
-                ),
-
-                // Botón guardar
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(top: 20, bottom: 10),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Acción al guardar tarifas
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Tarifas guardadas correctamente"),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.save_outlined),
-                        SizedBox(width: 8),
-                        Text("Guardar Tarifas", style: TextStyle(fontSize: 16)),
-                      ],
-                    ),
                   ),
                 ),
               ],
@@ -498,7 +490,10 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
               colors: [Colors.blue[300]!, Colors.blue[700]!],
             ),
           ),
-          child: const Icon(Icons.add, color: Colors.white),
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
         ),
       ),
     );
