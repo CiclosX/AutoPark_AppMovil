@@ -1,0 +1,2 @@
+C:/Users/izumi/OneDrive/Documentos/GitHub/AutoPark_AppMovil/android/app/.cxx/RelWithDebInfo/5t2b3z4y/x86/CMakeFiles/edit_cache.dir
+C:/Users/izumi/OneDrive/Documentos/GitHub/AutoPark_AppMovil/android/app/.cxx/RelWithDebInfo/5t2b3z4y/x86/CMakeFiles/rebuild_cache.dir

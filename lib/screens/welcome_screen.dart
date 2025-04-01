@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {
   final String userName;
-  
+
   const WelcomeScreen({
     super.key,
     required this.userName,
@@ -20,7 +20,7 @@ class WelcomeScreen extends StatelessWidget {
             right: 0,
             height: MediaQuery.of(context).size.height * 0.4,
             child: Image.asset(
-              'assets/img/carro.jpg', // Reemplaza con tu propia imagen
+              'assets/img/fondito.jpg', // Reemplaza con tu propia imagen
               fit: BoxFit.cover,
             ),
           ),
@@ -77,7 +77,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               // Mensaje de bienvenida
               const SizedBox(height: 24),
               const Text(
@@ -88,7 +88,7 @@ class WelcomeScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              
+
               // Nombre de usuario
               Text(
                 userName,
@@ -98,10 +98,10 @@ class WelcomeScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              
+
               // Espacio antes del botón
               const SizedBox(height: 50),
-              
+
               // Botón de entrar
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -144,17 +144,13 @@ class WaveClipper extends CustomClipper<Path> {
     path.lineTo(0, size.height);
     path.lineTo(size.width, size.height);
     path.lineTo(size.width, 0);
-    
+
     // Creando la forma de onda
     final firstControlPoint = Offset(size.width * 0.7, size.height * 0.15);
     final firstEndPoint = Offset(size.width * 0.5, size.height * 0.2);
-    path.quadraticBezierTo(
-      firstControlPoint.dx, 
-      firstControlPoint.dy, 
-      firstEndPoint.dx, 
-      firstEndPoint.dy
-    );
-    
+    path.quadraticBezierTo(firstControlPoint.dx, firstControlPoint.dy,
+        firstEndPoint.dx, firstEndPoint.dy);
+
     final secondControlPoint = Offset(size.width * 0.3, size.height * 0.25);
     const secondEndPoint = Offset(0, 0);
     path.quadraticBezierTo(

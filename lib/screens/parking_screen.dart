@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:autopark_appmovil/services/realtime_db_services.dart';
 import 'package:provider/provider.dart';
+import 'package:autopark_appmovil/screens/reservas_screen.dart'; // Asegúrate de importar tu pantalla de reservas
 
 class ParkingScreen extends StatelessWidget {
   final String espacioId;
-  final String espacioNombre; // Nuevo parámetro para el nombre del espacio
+  final String espacioNombre;
 
-  const ParkingScreen({super.key, required this.espacioId, required this.espacioNombre});
+  const ParkingScreen({
+    super.key, 
+    required this.espacioId, 
+    required this.espacioNombre
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +20,7 @@ class ParkingScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Estado de $espacioNombre', // Muestra el nombre del espacio
+          'Estado de $espacioNombre',
           style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.blue[800],
@@ -47,10 +52,10 @@ class ParkingScreen extends StatelessWidget {
               ultimaFecha = null;
             }
 
-            return Center( // Centrado de todo el contenido
+            return Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center, // Centrado vertical
-                crossAxisAlignment: CrossAxisAlignment.center, // Centrado horizontal
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(
                     Icons.local_parking,
@@ -59,7 +64,7 @@ class ParkingScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    '$espacioNombre: ${estado.toUpperCase()}', // Usa el nombre real
+                    '$espacioNombre: ${estado.toUpperCase()}',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -79,18 +84,50 @@ class ParkingScreen extends StatelessWidget {
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
-                      // Acción cuando se presiona el botón
+                      // Acción para actualizar estado
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue[800],
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12, 
+                        horizontal: 20
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
                     child: const Text(
                       'Actualizar Estado',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ReservasScreen(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange[800],
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12, 
+                        horizontal: 20
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                    child: const Text(
+                      'Reservas',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
