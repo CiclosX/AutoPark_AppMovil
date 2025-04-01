@@ -12,8 +12,10 @@ dependencies:
   firebase_core: ^3.12.1
   cloud_firestore: ^5.6.5
   provider: ^6.0.0
-  firebase_database : ^11.3.4
+  firebase_database: ^11.3.4
   intl: ^0.18.0
+  table_calendar: ^3.0.0
+  shared_preferences: ^2.2.2
   firebase_auth: ^5.5.1
   google_sign_in: ^6.3.0
 
@@ -27,4 +29,3 @@ flutter:
   assets:
     - assets/img/carro.jpg
     - assets/img/fondito.jpg
-
