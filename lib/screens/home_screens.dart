@@ -34,26 +34,16 @@ class HomeScreen extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'Bienvenido',
-              style: TextStyle(color: Colors.white),
-            ),
+            const Text('Bienvenido', style: TextStyle(color: Colors.white)),
             Row(
               children: [
                 CircleAvatar(
                   radius: 16,
                   backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.person,
-                    color: Colors.blue[800],
-                    size: 20,
-                  ),
+                  child: Icon(Icons.person, color: Colors.blue[800], size: 20),
                 ),
                 const SizedBox(width: 8),
-                const Text(
-                  'Juaquin',
-                  style: TextStyle(color: Colors.white),
-                ),
+                const Text('Juaquin', style: TextStyle(color: Colors.white)),
               ],
             ),
           ],
@@ -67,16 +57,15 @@ class HomeScreen extends StatelessWidget {
           children: [
             Center(
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
                 margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
                   color: Colors.blue[50],
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.blue[400]!,
-                    width: 1.5,
-                  ),
+                  border: Border.all(color: Colors.blue[400]!, width: 1.5),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.1),
@@ -122,29 +111,11 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
-                  
-                  // 2. Disponibilidad
                   _buildCard(
-                    title: 'Disponibilidad Actual',
-                    subtitle: 'Espacios Disponibles',
-                    icon: Icons.event_available,
-                    color: Colors.orange,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const FloorOverviewScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  
-                  // 3. Reservas
-                  _buildCard(
-                    title: 'Reservas',
-                    subtitle: '6 Reservas',
-                    icon: Icons.calendar_today,
-                    color: Colors.red,
+                    title: 'Vehiculos',
+                    subtitle: 'Gestion de vehiculos',
+                    icon: Icons.directions_car,
+                    color: Colors.blue,
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -154,18 +125,41 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
-                  
+                  _buildCard(
+                    title: 'Disponibilidad Actual',
+                    subtitle: 'Espacios Disponibles',
+                    icon: Icons.event_available,
+                    color: Colors.blue,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const FloorOverviewScreen(),
+                        ),
+                      );
+                    },
+                  ),
+
+                  // 3. Reservas
+                  _buildCard(
+                    title: 'Reservas',
+                    subtitle: '6 Reservas',
+                    icon: Icons.calendar_today,
+                    color: Colors.red,
+                    onPressed: () {},
+                  ),
+
                   // 4. Gestionar Reserva
                   _buildCard(
-                    title: 'Gestionar Reservas',
-                    subtitle: 'Administrar reservaciones',
+                    title: 'Reservas',
+                    subtitle: 'reservaciones',
                     icon: Icons.edit_calendar,
                     color: Colors.purple,
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>  RecuperarDatosReservasScreen(),
+                          builder: (context) => RecuperarDatosReservasScreen(),
                         ),
                       );
                     },
@@ -189,9 +183,7 @@ class HomeScreen extends StatelessWidget {
     return Card(
       elevation: 4,
       margin: const EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: InkWell(
         onTap: onPressed,
         borderRadius: BorderRadius.circular(10),
@@ -215,10 +207,7 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                   ),
                 ],
               ),

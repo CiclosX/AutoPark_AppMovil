@@ -44,6 +44,7 @@ class FirestoreServices {
     });
   }
 
+  
   Future<void>eliminarPiso(String collection, String docId) {
     return _firestore.collection(collection).doc(docId).delete();
   }
