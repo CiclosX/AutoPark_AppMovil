@@ -117,7 +117,7 @@ class HomeScreen extends StatelessWidget {
                     title: 'Estacionamiento',
                     subtitle: 'Tarifas y Espacios',
                     icon: Icons.attach_money,
-                    color: const Color.fromARGB(255, 0, 19, 160),
+                    color: const Color.fromARGB(0, 9, 0, 0),
                     onPressed: () {
                       Navigator.push(
                         context,
