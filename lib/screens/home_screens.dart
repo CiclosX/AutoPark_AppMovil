@@ -123,7 +123,7 @@ class HomeScreen extends StatelessWidget {
                     title: 'Vehiculos',
                     subtitle: 'Gestion de vehiculos',
                     icon: Icons.directions_car,
-                    color: Colors.green,
+                    color: Colors.blue,
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -137,7 +137,7 @@ class HomeScreen extends StatelessWidget {
                     title: 'Disponibilidad Actual',
                     subtitle: 'Espacios Disponibles',
                     icon: Icons.event_available,
-                    color: Colors.orange,
+                    color: Colors.blue,
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -157,7 +157,7 @@ class HomeScreen extends StatelessWidget {
                     title: 'Gestionar Reservas',
                     subtitle: '6 Reservas',
                     icon: Icons.calendar_today,
-                    color: Colors.red,
+                    color: Colors.blue
                   ),
                 ],
               ),
