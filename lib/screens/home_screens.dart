@@ -1,4 +1,5 @@
 import 'package:autopark_appmovil/screens/floor_overview_screen.dart';
+import 'package:autopark_appmovil/screens/recuperardatos_reservas.dart';
 import 'package:autopark_appmovil/screens/tarifa_overview_screen.dart';
 import 'package:autopark_appmovil/screens/veiculos_screen.dart';
 import 'package:flutter/material.dart';
@@ -164,7 +165,7 @@ class HomeScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const VehiculosScreen(),
+                          builder: (context) =>  RecuperarDatosReservasScreen(),
                         ),
                       );
                     },
