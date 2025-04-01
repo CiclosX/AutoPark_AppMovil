@@ -101,7 +101,7 @@ class HomeScreen extends StatelessWidget {
                     title: 'Estacionamiento',
                     subtitle: 'Tarifas y Espacios',
                     icon: Icons.attach_money,
-                    color: Colors.blue,
+                    color: const Color.fromARGB(255, 0, 19, 160),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -115,7 +115,7 @@ class HomeScreen extends StatelessWidget {
                     title: 'Vehiculos',
                     subtitle: 'Gestion de vehiculos',
                     icon: Icons.directions_car,
-                    color: Colors.blue,
+                    color: const Color.fromARGB(255, 227, 9, 9),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -129,7 +129,7 @@ class HomeScreen extends StatelessWidget {
                     title: 'Disponibilidad Actual',
                     subtitle: 'Espacios Disponibles',
                     icon: Icons.event_available,
-                    color: Colors.blue,
+                    color: const Color.fromARGB(255, 31, 219, 7),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -140,19 +140,11 @@ class HomeScreen extends StatelessWidget {
                     },
                   ),
 
-                  // 3. Reservas
-                  _buildCard(
-                    title: 'Reservas',
-                    subtitle: '6 Reservas',
-                    icon: Icons.calendar_today,
-                    color: Colors.red,
-                    onPressed: () {},
-                  ),
 
                   // 4. Gestionar Reserva
                   _buildCard(
                     title: 'Reservas',
-                    subtitle: 'reservaciones',
+                    subtitle: 'Visualizar reservaciones',
                     icon: Icons.edit_calendar,
                     color: Colors.purple,
                     onPressed: () {
