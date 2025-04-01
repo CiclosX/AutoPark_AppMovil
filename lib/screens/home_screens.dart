@@ -1,5 +1,5 @@
-import 'package:autopark_appmovil/screens/capacidad_screen.dart';
 import 'package:autopark_appmovil/screens/floor_overview_screen.dart';
+import 'package:autopark_appmovil/screens/tarifa_overview_screen.dart';
 import 'package:autopark_appmovil/screens/veiculos_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -114,9 +114,7 @@ class HomeScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const CapacidadScreen(
-                            estacionamientoId: 'Estacionamiento',
-                          ),
+                          builder: (context) => const TarifaOverviewScreen(),
                         ),
                       );
                     },
