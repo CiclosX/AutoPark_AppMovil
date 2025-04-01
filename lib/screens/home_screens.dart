@@ -122,13 +122,25 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
-                  
-                  // 2. Disponibilidad
+                  _buildCard(
+                    title: 'Vehiculos',
+                    subtitle: 'Gestion de vehiculos',
+                    icon: Icons.directions_car,
+                    color: Colors.blue,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const VehiculosScreen(),
+                        ),
+                      );
+                    },
+                  ),
                   _buildCard(
                     title: 'Disponibilidad ',
                     subtitle: 'Espacios Disponibles',
                     icon: Icons.event_available,
-                    color: Colors.orange,
+                    color: Colors.blue,
                     onPressed: () {
                       Navigator.push(
                         context,
