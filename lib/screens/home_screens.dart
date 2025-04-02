@@ -1,4 +1,3 @@
-import 'package:autopark_appmovil/main.dart';
 import 'package:autopark_appmovil/screens/floor_overview_screen.dart';
 import 'package:autopark_appmovil/screens/recuperardatos_reservas.dart';
 import 'package:autopark_appmovil/screens/tarifa_overview_screen.dart';
@@ -166,6 +165,7 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
+<<<<<<< HEAD
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
@@ -178,6 +178,8 @@ class HomeScreen extends StatelessWidget {
                     ),
                     child: const Text("Obtener usuarios"),
                   ),
+=======
+>>>>>>> 4a45846e2018774a8a5f63feb5c5cd179842cd6b
                 ],
               ),
             ),
