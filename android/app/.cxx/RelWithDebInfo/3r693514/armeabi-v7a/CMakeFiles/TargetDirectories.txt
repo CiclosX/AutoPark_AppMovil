@@ -1,0 +1,2 @@
+C:/Users/Brand/OneDrive/Documents/5 Cuatrimestre/Integradora/App_Movil/App_movil/AutoPark_AppMovil/android/app/.cxx/RelWithDebInfo/3r693514/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/Brand/OneDrive/Documents/5 Cuatrimestre/Integradora/App_Movil/App_movil/AutoPark_AppMovil/android/app/.cxx/RelWithDebInfo/3r693514/armeabi-v7a/CMakeFiles/rebuild_cache.dir
