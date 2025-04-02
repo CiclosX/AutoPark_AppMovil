@@ -1,4 +1,5 @@
 import 'package:autopark_appmovil/screens/signin_screen.dart';
+import 'package:autopark_appmovil/services/auth_services.dart';
 // import 'package:autopark_appmovil/screens/signin_screen.dart';
 import 'package:autopark_appmovil/services/realtime_db_services.dart';
 import 'package:autopark_appmovil/screens/welcome_screen.dart';
@@ -11,6 +12,24 @@ void main() async {
   await Firebase.initializeApp();
   runApp(const MainApp());
 }
+
+//TakiTakiRumba
+void probarIdToken() async {
+  AuthService authService = AuthService();
+  String? token = await authService.getIdToken();
+
+  if (token != null) {
+    print("ID Token obtenido: $token");
+  } else {
+    print("No hay usuario autenticado.");
+  }
+}
+
+void obtenerUsuarios() async {
+  AuthService authService = AuthService();
+  await authService.fetchUsers();
+}
+
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});

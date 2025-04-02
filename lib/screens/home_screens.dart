@@ -1,3 +1,4 @@
+import 'package:autopark_appmovil/main.dart';
 import 'package:autopark_appmovil/screens/floor_overview_screen.dart';
 import 'package:autopark_appmovil/screens/recuperardatos_reservas.dart';
 import 'package:autopark_appmovil/screens/tarifa_overview_screen.dart';
@@ -172,6 +173,15 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
+                  // 5. Obtener ID Token Es provicional XDDDDDD
+                  ElevatedButton(
+  onPressed: () {
+    obtenerUsuarios();
+  },
+  child: Text("Obtener usuarios"),
+),
+
+//Aki termina pa borrarlo despues
                 ],
               ),
             ),
