@@ -1,3 +1,4 @@
+import 'package:autopark_appmovil/main.dart';
 import 'package:autopark_appmovil/screens/floor_overview_screen.dart';
 import 'package:autopark_appmovil/screens/recuperardatos_reservas.dart';
 import 'package:autopark_appmovil/screens/tarifa_overview_screen.dart';
@@ -64,7 +65,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-        backgroundColor: Colors.blue[800],
+        backgroundColor: const Color.fromRGBO(21, 101, 192, 1),
         elevation: 0,
       ),
       body: Padding(
@@ -117,7 +118,7 @@ class HomeScreen extends StatelessWidget {
                     title: 'Estacionamiento',
                     subtitle: 'Tarifas y Espacios',
                     icon: Icons.attach_money,
-                    color: const Color.fromARGB(255, 0, 19, 160),
+                    color: const Color.fromARGB(21, 101, 192, 1),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -131,7 +132,7 @@ class HomeScreen extends StatelessWidget {
                     title: 'Vehiculos',
                     subtitle: 'Gestion de vehiculos',
                     icon: Icons.directions_car,
-                    color: const Color.fromARGB(255, 227, 9, 9),
+                    color: const Color.fromARGB(21, 101, 192, 1),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -145,7 +146,7 @@ class HomeScreen extends StatelessWidget {
                     title: 'Disponibilidad Actual',
                     subtitle: 'Espacios Disponibles',
                     icon: Icons.event_available,
-                    color: const Color.fromARGB(255, 31, 219, 7),
+                    color: const Color.fromARGB(21, 101, 192, 1),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -162,7 +163,7 @@ class HomeScreen extends StatelessWidget {
                     title: 'Reservas',
                     subtitle: 'Visualizar reservaciones',
                     icon: Icons.edit_calendar,
-                    color: Colors.purple,
+                    color: const Color.fromARGB(21, 101, 192, 1),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -172,6 +173,15 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
+                  // 5. Obtener ID Token Es provicional XDDDDDD
+                  ElevatedButton(
+  onPressed: () {
+    obtenerUsuarios();
+  },
+  child: Text("Obtener usuarios"),
+),
+
+//Aki termina pa borrarlo despues
                 ],
               ),
             ),
