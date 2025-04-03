@@ -23,6 +23,8 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Bienvenido', style: TextStyle(color: Colors.white)),
         backgroundColor: primaryBlue,
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
         actions: [
           IconButton(
