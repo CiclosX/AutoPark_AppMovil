@@ -24,6 +24,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.13.1
+  
+
 
 flutter:
   uses-material-design: true
@@ -33,3 +36,11 @@ flutter:
     - assets/img/google-logo.png
     - assets/img/fondito.jpg
     - assets/img/logo.jpg
+    - assets/icon/icono_central.jpg
+
+flutter_launcher_icons:
+  android: "launcher_icon"  # Especificar el nombre del icono
+  ios: true
+  image_path: "assets/icon/icono_central.jpg"
+  adaptive_icon_background: "#FFFFFF"  # Color de fondo para iconos adaptables en Android 8.0+
+  min_sdk_android: 21
