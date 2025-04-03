@@ -59,74 +59,119 @@ class _ReservasScreenState extends State<ReservasScreen> {
       });
     } catch (e) {
       debugPrint('Error loading reservations: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error al cargar reservas')),
-      );
+      _showErrorSnackbar('Error al cargar reservas');
       setState(() => _isLoading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Reservas'),
-        centerTitle: true,
-        backgroundColor: Colors.blue[800],
+      backgroundColor: Colors.grey[100],
+      appBar: _buildAppBar(),
+      body: _isLoading ? _buildLoadingIndicator() : _buildMainContent(),
+      floatingActionButton: _buildAddButton(),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: const Text(
+        'Reservas',
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
       ),
-      body: Column(
-        children: [
-          TableCalendar(
-            firstDay: DateTime.now().subtract(const Duration(days: 365)),
-            lastDay: DateTime.now().add(const Duration(days: 365)),
-            focusedDay: _focusedDay,
-            calendarFormat: _calendarFormat,
-            onFormatChanged: (format) {
-              setState(() => _calendarFormat = format);
-            },
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            onDaySelected: (selectedDay, focusedDay) {
-              if (!isSameDay(_selectedDay, selectedDay)) {
-                setState(() {
-                  _selectedDay = selectedDay;
-                  _focusedDay = focusedDay;
-                });
-              }
-            },
-            calendarStyle: CalendarStyle(
-              todayDecoration: const BoxDecoration(
-                color: Colors.blueAccent,
-                shape: BoxShape.circle,
-              ),
-              selectedDecoration: BoxDecoration(
-                color: Colors.blue[800],
-                shape: BoxShape.circle,
-              ),
-              markerDecoration: const BoxDecoration(
-                color: Colors.red,
-                shape: BoxShape.circle,
-              ),
+      centerTitle: true,
+      backgroundColor: Colors.blue[800],
+      elevation: 0,
+      iconTheme: const IconThemeData(color: Colors.white),
+    );
+  }
+
+  Widget _buildLoadingIndicator() {
+    return const Center(
+      child: CircularProgressIndicator(
+        color: Colors.blue,
+        strokeWidth: 3,
+      ),
+    );
+  }
+
+  Widget _buildMainContent() {
+    return Column(
+      children: [
+        _buildCalendarCard(),
+        const SizedBox(height: 8),
+        Expanded(child: _buildReservationList()),
+      ],
+    );
+  }
+
+  Widget _buildCalendarCard() {
+    return Card(
+      margin: const EdgeInsets.all(16),
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: TableCalendar(
+          firstDay: DateTime.now().subtract(const Duration(days: 365)),
+          lastDay: DateTime.now().add(const Duration(days: 365)),
+          focusedDay: _focusedDay,
+          calendarFormat: _calendarFormat,
+          onFormatChanged: (format) => setState(() => _calendarFormat = format),
+          selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+          onDaySelected: (selectedDay, focusedDay) {
+            if (!isSameDay(_selectedDay, selectedDay)) {
+              setState(() {
+                _selectedDay = selectedDay;
+                _focusedDay = focusedDay;
+              });
+            }
+          },
+          calendarStyle: CalendarStyle(
+            todayDecoration: BoxDecoration(
+              color: Colors.blue[400],
+              shape: BoxShape.circle,
             ),
-            eventLoader: (day) {
-              return _reservations[day]?.map((r) => r['hora'] ?? '').toList() ?? [];
-            },
+            selectedDecoration: BoxDecoration(
+              color: Colors.blue[800],
+              shape: BoxShape.circle,
+            ),
+            markerDecoration: BoxDecoration(
+              color: Colors.red[400],
+              shape: BoxShape.circle,
+            ),
+            outsideDaysVisible: false,
           ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: _buildReservationList(),
+          headerStyle: HeaderStyle(
+            titleTextStyle: TextStyle(
+              color: Colors.grey[800],
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+            formatButtonTextStyle: TextStyle(
+              color: Colors.blue[800],
+              fontWeight: FontWeight.w600,
+            ),
+            formatButtonDecoration: BoxDecoration(
+              border: Border.all(color: Colors.blue[800]!),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            leftChevronIcon: Icon(Icons.chevron_left, color: Colors.blue[800]),
+            rightChevronIcon: Icon(Icons.chevron_right, color: Colors.blue[800]),
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showTimePicker(context),
-        backgroundColor: Colors.blue[800],
-        child: const Icon(Icons.add, color: Colors.white),
+          daysOfWeekStyle: DaysOfWeekStyle(
+            weekdayStyle: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.w600),
+            weekendStyle: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.w600),
+          ),
+          eventLoader: (day) => _reservations[day]?.map((r) => r['hora'] ?? '').toList() ?? [],
+        ),
       ),
     );
   }
@@ -136,43 +181,81 @@ class _ReservasScreenState extends State<ReservasScreen> {
     final reservations = _reservations[normalizedDate] ?? [];
     
     if (reservations.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
           'No hay reservas para este día',
-          style: TextStyle(fontSize: 18, color: Colors.grey),
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.grey[600],
+          ),
         ),
       );
     }
     
-    // Ordenar por hora
     reservations.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
     
-    return ListView.builder(
-      itemCount: reservations.length,
-      itemBuilder: (context, index) => Card(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        elevation: 3,
-        child: ListTile(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Fecha: ${reservations[index]['fechaStr']}',
-                style: const TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Hora: ${reservations[index]['hora']}',
-                style: const TextStyle(fontSize: 16),
-              ),
-            ],
-          ),
-          trailing: IconButton(
-            icon: const Icon(Icons.delete, color: Colors.red),
-            onPressed: () => _confirmDeleteReservation(reservations[index]['id']),
-          ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        itemCount: reservations.length,
+        itemBuilder: (context, index) => _buildReservationCard(reservations[index]),
+      ),
+    );
+  }
+
+  Widget _buildReservationCard(Map<String, dynamic> reservation) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Fecha: ${reservation['fechaStr']}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[800],
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Hora: ${reservation['hora']}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red, size: 28),
+              onPressed: () => _confirmDeleteReservation(reservation['id']),
+            ),
+          ],
         ),
       ),
+    );
+  }
+
+  FloatingActionButton _buildAddButton() {
+    return FloatingActionButton(
+      onPressed: () => _showTimePicker(context),
+      backgroundColor: Colors.blue[800],
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: const Icon(Icons.add, color: Colors.white, size: 28),
     );
   }
 
@@ -185,7 +268,10 @@ class _ReservasScreenState extends State<ReservasScreen> {
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
               primary: Colors.blue[800]!,
+              onPrimary: Colors.white,
+              surface: Colors.white,
             ),
+            dialogBackgroundColor: Colors.white,
           ),
           child: child!,
         );
@@ -202,7 +288,6 @@ class _ReservasScreenState extends State<ReservasScreen> {
       final hora = _formatTimeOfDay(time);
       final fechaStr = '${_selectedDay.day} de ${_getMonthName(_selectedDay.month)} de ${_selectedDay.year}';
       
-      // Creamos DateTime con la hora seleccionada
       final fechaCompleta = DateTime(
         _selectedDay.year,
         _selectedDay.month,
@@ -211,7 +296,6 @@ class _ReservasScreenState extends State<ReservasScreen> {
         time.minute,
       );
       
-      // Agregar a Firestore
       await _firestore.collection('reservas').add({
         'fecha': Timestamp.fromDate(fechaCompleta),
         'fechaStr': fechaStr,
@@ -219,17 +303,11 @@ class _ReservasScreenState extends State<ReservasScreen> {
         'timestamp': fechaCompleta,
       });
       
-      // Actualizar UI
       _loadReservations();
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Reserva agregada: $hora')),
-      );
+      _showSuccessSnackbar('Reserva agregada: $hora');
     } catch (e) {
       debugPrint('Error adding reservation: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error al agregar reserva')),
-      );
+      _showErrorSnackbar('Error al agregar reserva');
     }
   }
 
@@ -237,22 +315,41 @@ class _ReservasScreenState extends State<ReservasScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Confirmar'),
-        content: const Text('¿Eliminar esta reserva?'),
+        title: Text(
+          'Confirmar eliminación',
+          style: TextStyle(
+            color: Colors.grey[800],
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: const Text('¿Estás seguro de que deseas eliminar esta reserva?'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
+            child: const Text(
+              'Cancelar',
+              style: TextStyle(color: Colors.grey),
+            ),
           ),
           ElevatedButton(
             onPressed: () async {
-              await _deleteReservation(docId);
               Navigator.pop(context);
+              await _deleteReservation(docId);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             ),
-            child: const Text('Eliminar'),
+            child: const Text(
+              'Eliminar',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -263,15 +360,37 @@ class _ReservasScreenState extends State<ReservasScreen> {
     try {
       await _firestore.collection('reservas').doc(docId).delete();
       _loadReservations();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Reserva eliminada')),
-      );
+      _showSuccessSnackbar('Reserva eliminada');
     } catch (e) {
       debugPrint('Error deleting reservation: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error al eliminar reserva')),
-      );
+      _showErrorSnackbar('Error al eliminar reserva');
     }
+  }
+
+  void _showSuccessSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
+  }
+
+  void _showErrorSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
   }
 
   String _formatTimeOfDay(TimeOfDay time) {

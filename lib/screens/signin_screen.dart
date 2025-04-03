@@ -19,7 +19,7 @@ class SigninScreen extends StatelessWidget {
             children: [
               // Logo de la aplicación
               Image.asset(
-                'assets/images/app_logo.png',
+                'assets/img/logo.jpg',
                 height: 150,
                 width: 150,
               ),
@@ -37,7 +37,7 @@ class SigninScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Gestiona tus mascotas de forma fácil y segura',
+                'Encuentra tu lugar, sin complicaciones',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.black54,

@@ -1,18 +1,20 @@
-import 'package:autopark_appmovil/main.dart';
 import 'package:autopark_appmovil/screens/floor_overview_screen.dart';
 import 'package:autopark_appmovil/screens/recuperardatos_reservas.dart';
 import 'package:autopark_appmovil/screens/tarifa_overview_screen.dart';
 import 'package:autopark_appmovil/screens/veiculos_screen.dart';
-import 'package:autopark_appmovil/screens/signin_screen.dart'; // Importa la pantalla de login
-import 'package:autopark_appmovil/services/auth_services.dart'; // Importa el AuthService
+import 'package:autopark_appmovil/screens/signin_screen.dart';
+import 'package:autopark_appmovil/services/auth_services.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  // Definimos el color azul principal como constante
+  static const Color primaryBlue = Color.fromRGBO(21, 101, 192, 1);
+
   @override
   Widget build(BuildContext context) {
-    final AuthService _authService = AuthService();
+    final AuthService authService = AuthService();
 
     return Scaffold(
       appBar: AppBar(
@@ -22,12 +24,10 @@ class HomeScreen extends StatelessWidget {
             const Text('Bienvenido', style: TextStyle(color: Colors.white)),
             Row(
               children: [
-                // Botón de cerrar sesión
                 IconButton(
                   icon: const Icon(Icons.logout, color: Colors.white),
                   tooltip: 'Cerrar sesión',
                   onPressed: () async {
-                    // Mostrar diálogo de confirmación
                     bool confirm = await showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -40,14 +40,14 @@ class HomeScreen extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(true),
-                            child: const Text('Salir'),
+                            child: const Text('Salir', style: TextStyle(color: primaryBlue)),
                           ),
                         ],
                       ),
                     ) ?? false;
 
                     if (confirm) {
-                      await _authService.signOut();
+                      await authService.signOut();
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) =>  SigninScreen()),
@@ -56,16 +56,16 @@ class HomeScreen extends StatelessWidget {
                   },
                 ),
                 const SizedBox(width: 8),
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 16,
                   backgroundColor: Colors.white,
-                  child: Icon(Icons.person, color: Colors.blue[800], size: 20),
+                  child: Icon(Icons.person, color: primaryBlue, size: 20),
                 ),
               ],
             ),
           ],
         ),
-        backgroundColor: const Color.fromRGBO(21, 101, 192, 1),
+        backgroundColor: primaryBlue,
         elevation: 0,
       ),
       body: Padding(
@@ -80,9 +80,9 @@ class HomeScreen extends StatelessWidget {
                 ),
                 margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
-                  color: Colors.blue[50],
+                  color: primaryBlue.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.blue[400]!, width: 1.5),
+                  border: Border.all(color: primaryBlue, width: 1.5),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.1),
@@ -92,17 +92,17 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Row(
+                child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.home, color: Colors.blue[800]),
-                    const SizedBox(width: 8),
+                    Icon(Icons.home, color: primaryBlue),
+                    SizedBox(width: 8),
                     Text(
                       'ADMINISTRADOR',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue[800],
+                        color: primaryBlue,
                         letterSpacing: 1.0,
                       ),
                     ),
@@ -113,12 +113,10 @@ class HomeScreen extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  // 1. Estacionamiento
                   _buildCard(
                     title: 'Estacionamiento',
                     subtitle: 'Tarifas y Espacios',
                     icon: Icons.attach_money,
-                    color: const Color.fromARGB(21, 101, 192, 1),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -132,7 +130,6 @@ class HomeScreen extends StatelessWidget {
                     title: 'Vehiculos',
                     subtitle: 'Gestion de vehiculos',
                     icon: Icons.directions_car,
-                    color: const Color.fromARGB(21, 101, 192, 1),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -143,10 +140,9 @@ class HomeScreen extends StatelessWidget {
                     },
                   ),
                   _buildCard(
-                    title: 'Disponibilidad Actual',
+                    title: 'Disponibilidad',
                     subtitle: 'Espacios Disponibles',
                     icon: Icons.event_available,
-                    color: const Color.fromARGB(21, 101, 192, 1),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -156,14 +152,10 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
-
-
-                  // 4. Gestionar Reserva
                   _buildCard(
                     title: 'Reservas',
                     subtitle: 'Visualizar reservaciones',
                     icon: Icons.edit_calendar,
-                    color: const Color.fromARGB(21, 101, 192, 1),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -173,15 +165,18 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
-                  // 5. Obtener ID Token Es provicional XDDDDDD
+                  const SizedBox(height: 16),
                   ElevatedButton(
-  onPressed: () {
-    obtenerUsuarios();
-  },
-  child: Text("Obtener usuarios"),
-),
-
-//Aki termina pa borrarlo despues
+                    onPressed: () {
+                      // obtenerUsuarios();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryBlue,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: const Text("Obtener usuarios"),
+                  ),
                 ],
               ),
             ),
@@ -195,7 +190,6 @@ class HomeScreen extends StatelessWidget {
     required String title,
     required String subtitle,
     required IconData icon,
-    required Color color,
     VoidCallback? onPressed,
   }) {
     return Card(
@@ -209,7 +203,7 @@ class HomeScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Row(
             children: [
-              Icon(icon, color: color, size: 40),
+              Icon(icon, color: primaryBlue, size: 40),
               const SizedBox(width: 16),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,0 +1,2 @@
+C:/Users/Hola/Documents/GitHub/AutoPark_AppMovil/android/app/.cxx/RelWithDebInfo/4l3w67n3/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/Hola/Documents/GitHub/AutoPark_AppMovil/android/app/.cxx/RelWithDebInfo/4l3w67n3/arm64-v8a/CMakeFiles/rebuild_cache.dir

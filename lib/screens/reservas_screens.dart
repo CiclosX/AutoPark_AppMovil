@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -12,7 +10,14 @@ class EspaciosScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Detalles del Espacio')),
+      appBar: AppBar(
+        title: const Text(
+          'Detalles del Espacio',
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.blue[800],
+        elevation: 0,
+      ),
       body: FutureBuilder<DocumentSnapshot>(
         future:
             FirebaseFirestore.instance.collection('espacios').doc(docId).get(),
@@ -32,15 +37,10 @@ class EspaciosScreen extends StatelessWidget {
             return const Center(
               child: Text(
                 'No se encontraron datos.',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             );
           }
-
-          // Mensaje de conexión exitosa en la consola
-
-          log("✅ Conectado a Firebase: Datos recuperados correctamente."
-              as num);
 
           var data = snapshot.data!;
           int capacidad = data['capacidad'];
@@ -67,19 +67,43 @@ class EspaciosScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Text('Capacidad: $capacidad',
-                    style: const TextStyle(fontSize: 18)),
-                Text('Horario: $formattedDate',
-                    style: const TextStyle(fontSize: 18)),
-                Text('Tarifa: \$${tarifa.toString()}',
-                    style: const TextStyle(fontSize: 18)),
-                Text('Ubicación: $ubicacion',
-                    style: const TextStyle(fontSize: 18)),
+                _buildInfoRow('Capacidad:', '$capacidad'),
+                const SizedBox(height: 8),
+                _buildInfoRow('Horario:', formattedDate),
+                const SizedBox(height: 8),
+                _buildInfoRow('Tarifa:', '\$${tarifa.toString()}'),
+                const SizedBox(height: 8),
+                _buildInfoRow('Ubicación:', ubicacion),
               ],
             ),
           );
         },
       ),
+    );
+  }
+
+  Widget _buildInfoRow(String title, String value) {
+    return Row(
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.blueAccent,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(
+              fontSize: 18,
+              color: Colors.black87,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
