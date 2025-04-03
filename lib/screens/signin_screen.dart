@@ -23,6 +23,7 @@ class SigninScreen extends StatelessWidget {
                 height: 150,
                 width: 150,
               ),
+              
               const SizedBox(height: 30),
               
               // Mensaje de bienvenida
