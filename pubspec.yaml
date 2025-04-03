@@ -18,6 +18,7 @@ dependencies:
   shared_preferences: ^2.2.2
   firebase_auth: ^5.5.1
   google_sign_in: ^6.3.0
+  url_launcher: ^6.1.11
 
 dev_dependencies:
   flutter_test:
@@ -31,3 +32,4 @@ flutter:
     - assets/img/fondito.jpg
     - assets/img/google-logo.png
     - assets/img/fondito.jpg
+    - assets/img/logo.jpg

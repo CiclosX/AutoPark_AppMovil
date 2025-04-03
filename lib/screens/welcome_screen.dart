@@ -89,16 +89,6 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
 
-              // Nombre de usuario
-              Text(
-                userName,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
               // Espacio antes del botón
               const SizedBox(height: 50),
 
