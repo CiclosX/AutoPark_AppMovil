@@ -31,7 +31,6 @@
 //                 width: 150,
 //               ),
 //               const SizedBox(height: 30),
-              
 //               // Mensaje de bienvenida
 //               const Text(
 //                 '¡Bienvenido a Autopark!',
@@ -52,12 +51,11 @@
 //                 textAlign: TextAlign.center,
 //               ),
 //               const SizedBox(height: 40),
-              
 //               // Botón de Google mejorado
 //               SizedBox(
 //                 width: double.infinity,
 //                 child: ElevatedButton.icon(
-//                   onPressed: _termsAccepted 
+//                   onPressed: _termsAccepted
 //                       ? () => _signInWithGoogle(context)
 //                       : null,
 //                   style: ElevatedButton.styleFrom(
@@ -87,7 +85,6 @@
 //                 ),
 //               ),
 //               const SizedBox(height: 20),
-              
 //               // Checkbox de términos y condiciones
 //               Row(
 //                 mainAxisAlignment: MainAxisAlignment.center,
@@ -156,7 +153,6 @@
 
 //     try {
 //       final credenciales = await _authService.signInWithGoogle();
-      
 //       if (credenciales.user != null && mounted) {
 //         Navigator.pushReplacement(
 //           context,
