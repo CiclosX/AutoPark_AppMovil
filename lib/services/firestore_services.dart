@@ -36,6 +36,9 @@ class FirestoreServices {
       return [];
     }
   }
+
+  
+
 //Taki taki Rumba
 
   Stream <List<FloorModel>>obtenerPisos() {
@@ -79,6 +82,8 @@ class FirestoreServices {
   Future<void> eliminarTarifa(String docId) {
     return _firestore.collection('estacionamiento').doc(docId).delete();
   }
+
+  streamUser(uid) {}
 
 }
 

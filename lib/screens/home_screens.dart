@@ -2,6 +2,7 @@ import 'package:autopark_appmovil/models/usuario.dart';
 import 'package:autopark_appmovil/screens/auth_scren.dart';
 import 'package:autopark_appmovil/screens/floor_overview_screen.dart';
 import 'package:autopark_appmovil/screens/mis_vehiculos_screen.dart';
+import 'package:autopark_appmovil/screens/profile_screen.dart';
 import 'package:autopark_appmovil/screens/recuperardatos_reservas.dart';
 import 'package:autopark_appmovil/screens/tarifa_overview_screen.dart';
 import 'package:autopark_appmovil/screens/users_screen.dart';
@@ -57,10 +58,19 @@ class HomeScreen extends StatelessWidget {
             },
           ),
           const SizedBox(width: 8),
-          const CircleAvatar(
-            radius: 16,
-            backgroundColor: Colors.white,
-            child: Icon(Icons.person, color: primaryBlue, size: 20),
+          // En la parte de las acciones del AppBar, reemplaza el CircleAvatar actual con:
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+              );
+            },
+            child: const CircleAvatar(
+              radius: 16,
+              backgroundColor: Colors.white,
+              child: Icon(Icons.person, color: primaryBlue, size: 20),
+            ),
           ),
           const SizedBox(width: 16),
         ],
