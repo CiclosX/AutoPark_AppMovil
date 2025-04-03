@@ -1,3 +1,4 @@
+import 'package:autopark_appmovil/screens/home_screens.dart';
 import 'package:autopark_appmovil/services/vehiculos_services.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,9 @@ class MisVehiculosScreen extends StatefulWidget {
 }
 
 class _MisVehiculosScreenState extends State<MisVehiculosScreen> {
+  // Definición del color primaryBlue
+  final Color primaryBlue = Color.fromARGB(255,21,101,192); // Puedes ajustar este color según tus preferencias
+  
   List<Map<String, dynamic>> vehiculos = [];
   final VehiculoService _vehiculoService = VehiculoService();
 
@@ -71,7 +75,11 @@ class _MisVehiculosScreenState extends State<MisVehiculosScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Mis Vehículos")),
+      appBar: AppBar(
+        title: const Text("Mis Vehículos", style: TextStyle(color: Colors.white)),
+        backgroundColor: primaryBlue,
+      ),
+      
       body: vehiculos.isEmpty
           ? const Center(child: Text("No tienes vehículos registrados"))
           : ListView.builder(
