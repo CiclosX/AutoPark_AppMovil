@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(const MaterialApp(home: ReservasScreen()));
-}
+import 'package:provider/provider.dart';
+import 'package:autopark_appmovil/providers/theme_provider.dart';
 
 class ReservasScreen extends StatefulWidget {
   const ReservasScreen({super.key});
@@ -66,57 +61,51 @@ class _ReservasScreenState extends State<ReservasScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+    final primaryColor = isDarkMode ? Colors.blue[900] : Colors.blue[800];
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: _buildAppBar(),
-      body: _isLoading ? _buildLoadingIndicator() : _buildMainContent(),
-      floatingActionButton: _buildAddButton(),
-    );
-  }
-
-  AppBar _buildAppBar() {
-    return AppBar(
-      title: const Text(
-        'Reservas',
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-        ),
+      backgroundColor: isDarkMode ? Colors.grey[850] : Colors.grey[100],
+      appBar: AppBar(
+        title: const Text('Reservas', style: TextStyle(color: Colors.white)),
+        backgroundColor: primaryColor,
+        iconTheme: const IconThemeData(color: Colors.white),
+        elevation: 0,
       ),
-      centerTitle: true,
-      backgroundColor: Colors.blue[800],
-      elevation: 0,
-      iconTheme: const IconThemeData(color: Colors.white),
+      body: _isLoading ? _buildLoadingIndicator(theme) : _buildMainContent(theme),
+      floatingActionButton: _buildAddButton(theme),
     );
   }
 
-  Widget _buildLoadingIndicator() {
-    return const Center(
+  Widget _buildLoadingIndicator(ThemeData theme) {
+    return Center(
       child: CircularProgressIndicator(
-        color: Colors.blue,
+        color: theme.primaryColor,
         strokeWidth: 3,
       ),
     );
   }
 
-  Widget _buildMainContent() {
+  Widget _buildMainContent(ThemeData theme) {
     return Column(
       children: [
-        _buildCalendarCard(),
+        _buildCalendarCard(theme),
         const SizedBox(height: 8),
-        Expanded(child: _buildReservationList()),
+        Expanded(child: _buildReservationList(theme)),
       ],
     );
   }
 
-  Widget _buildCalendarCard() {
+  Widget _buildCalendarCard(ThemeData theme) {
     return Card(
       margin: const EdgeInsets.all(16),
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
+      color: theme.cardTheme.color,
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: TableCalendar(
@@ -136,39 +125,37 @@ class _ReservasScreenState extends State<ReservasScreen> {
           },
           calendarStyle: CalendarStyle(
             todayDecoration: BoxDecoration(
-              color: Colors.blue[400],
+              color: theme.primaryColor.withOpacity(0.6),
               shape: BoxShape.circle,
             ),
             selectedDecoration: BoxDecoration(
-              color: Colors.blue[800],
+              color: theme.primaryColor,
               shape: BoxShape.circle,
             ),
             markerDecoration: BoxDecoration(
-              color: Colors.red[400],
+              color: Colors.red,
               shape: BoxShape.circle,
             ),
             outsideDaysVisible: false,
+            defaultTextStyle: theme.textTheme.bodyMedium!,
+            weekendTextStyle: theme.textTheme.bodyMedium!,
+            holidayTextStyle: theme.textTheme.bodyMedium!,
           ),
           headerStyle: HeaderStyle(
-            titleTextStyle: TextStyle(
-              color: Colors.grey[800],
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-            formatButtonTextStyle: TextStyle(
-              color: Colors.blue[800],
-              fontWeight: FontWeight.w600,
+            titleTextStyle: theme.textTheme.titleMedium!,
+            formatButtonTextStyle: theme.textTheme.bodyMedium!.copyWith(
+              color: theme.primaryColor,
             ),
             formatButtonDecoration: BoxDecoration(
-              border: Border.all(color: Colors.blue[800]!),
+              border: Border.all(color: theme.primaryColor),
               borderRadius: BorderRadius.circular(8),
             ),
-            leftChevronIcon: Icon(Icons.chevron_left, color: Colors.blue[800]),
-            rightChevronIcon: Icon(Icons.chevron_right, color: Colors.blue[800]),
+            leftChevronIcon: Icon(Icons.chevron_left, color: theme.primaryColor),
+            rightChevronIcon: Icon(Icons.chevron_right, color: theme.primaryColor),
           ),
           daysOfWeekStyle: DaysOfWeekStyle(
-            weekdayStyle: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.w600),
-            weekendStyle: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.w600),
+            weekdayStyle: theme.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
+            weekendStyle: theme.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
           ),
           eventLoader: (day) => _reservations[day]?.map((r) => r['hora'] ?? '').toList() ?? [],
         ),
@@ -176,7 +163,7 @@ class _ReservasScreenState extends State<ReservasScreen> {
     );
   }
 
-  Widget _buildReservationList() {
+  Widget _buildReservationList(ThemeData theme) {
     final normalizedDate = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
     final reservations = _reservations[normalizedDate] ?? [];
     
@@ -184,9 +171,8 @@ class _ReservasScreenState extends State<ReservasScreen> {
       return Center(
         child: Text(
           'No hay reservas para este día',
-          style: TextStyle(
-            fontSize: 18,
-            color: Colors.grey[600],
+          style: theme.textTheme.bodyLarge?.copyWith(
+            color: theme.textTheme.bodyLarge?.color?.withOpacity(0.6),
           ),
         ),
       );
@@ -199,18 +185,19 @@ class _ReservasScreenState extends State<ReservasScreen> {
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
         itemCount: reservations.length,
-        itemBuilder: (context, index) => _buildReservationCard(reservations[index]),
+        itemBuilder: (context, index) => _buildReservationCard(reservations[index], theme),
       ),
     );
   }
 
-  Widget _buildReservationCard(Map<String, dynamic> reservation) {
+  Widget _buildReservationCard(Map<String, dynamic> reservation, ThemeData theme) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
       margin: const EdgeInsets.only(bottom: 16),
+      color: theme.cardTheme.color,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -221,25 +208,20 @@ class _ReservasScreenState extends State<ReservasScreen> {
               children: [
                 Text(
                   'Fecha: ${reservation['fechaStr']}',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[800],
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: theme.textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Hora: ${reservation['hora']}',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[600],
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.textTheme.bodyMedium?.color?.withOpacity(0.8),
                   ),
                 ),
               ],
             ),
             IconButton(
-              icon: const Icon(Icons.delete, color: Colors.red, size: 28),
-              onPressed: () => _confirmDeleteReservation(reservation['id']),
+              icon: Icon(Icons.delete, color: Colors.red, size: 28),
+              onPressed: () => _confirmDeleteReservation(reservation['id'], theme),
             ),
           ],
         ),
@@ -247,31 +229,31 @@ class _ReservasScreenState extends State<ReservasScreen> {
     );
   }
 
-  FloatingActionButton _buildAddButton() {
+  FloatingActionButton _buildAddButton(ThemeData theme) {
     return FloatingActionButton(
-      onPressed: () => _showTimePicker(context),
-      backgroundColor: Colors.blue[800],
+      onPressed: () => _showTimePicker(context, theme),
+      backgroundColor: theme.primaryColor,
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
-      child: const Icon(Icons.add, color: Colors.white, size: 28),
+      child: Icon(Icons.add, color: Colors.white, size: 28),
     );
   }
 
-  Future<void> _showTimePicker(BuildContext context) async {
+  Future<void> _showTimePicker(BuildContext context, ThemeData theme) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
       builder: (context, child) {
         return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: Colors.blue[800]!,
+          data: theme.copyWith(
+            colorScheme: theme.colorScheme.copyWith(
+              primary: theme.primaryColor,
               onPrimary: Colors.white,
-              surface: Colors.white,
+              surface: theme.cardTheme.color ?? theme.colorScheme.surface,
             ),
-            dialogBackgroundColor: Colors.white,
+            dialogBackgroundColor: theme.cardTheme.color,
           ),
           child: child!,
         );
@@ -311,27 +293,27 @@ class _ReservasScreenState extends State<ReservasScreen> {
     }
   }
 
-  Future<void> _confirmDeleteReservation(String docId) async {
+  Future<void> _confirmDeleteReservation(String docId, ThemeData theme) async {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
           'Confirmar eliminación',
-          style: TextStyle(
-            color: Colors.grey[800],
-            fontWeight: FontWeight.bold,
-          ),
+          style: theme.textTheme.titleLarge,
         ),
         content: const Text('¿Estás seguro de que deseas eliminar esta reserva?'),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
+        backgroundColor: theme.cardTheme.color,
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text(
+            child: Text(
               'Cancelar',
-              style: TextStyle(color: Colors.grey),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
+              ),
             ),
           ),
           ElevatedButton(
@@ -346,9 +328,11 @@ class _ReservasScreenState extends State<ReservasScreen> {
               ),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             ),
-            child: const Text(
+            child: Text(
               'Eliminar',
-              style: TextStyle(color: Colors.white),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: Colors.white,
+              ),
             ),
           ),
         ],

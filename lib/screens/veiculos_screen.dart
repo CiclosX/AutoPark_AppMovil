@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:autopark_appmovil/providers/theme_provider.dart';
 
 class Vehiculo {
   final String id;
@@ -21,7 +23,6 @@ class VehiculosScreen extends StatefulWidget {
   const VehiculosScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _VehiculosScreenState createState() => _VehiculosScreenState();
 }
 
@@ -121,11 +122,13 @@ class _VehiculosScreenState extends State<VehiculosScreen> {
     showDialog(
       context: context,
       builder: (context) {
+        final theme = Theme.of(context);
         return AlertDialog(
           title: Text(
             vehiculo == null ? 'Agregar Vehículo' : 'Editar Vehículo',
-            style: TextStyle(color: Colors.grey[800]),
+            style: theme.textTheme.titleLarge,
           ),
+          backgroundColor: theme.cardTheme.color,
           content: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -137,12 +140,13 @@ class _VehiculosScreenState extends State<VehiculosScreen> {
                     decoration: InputDecoration(
                       labelText: 'Color',
                       filled: true,
-                      fillColor: Colors.grey[100],
+                      fillColor: theme.cardTheme.color,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
                       ),
                     ),
+                    style: theme.textTheme.bodyMedium,
                     validator: (value) => value!.isEmpty ? 'Ingrese el color' : null,
                   ),
                   const SizedBox(height: 16),
@@ -151,12 +155,13 @@ class _VehiculosScreenState extends State<VehiculosScreen> {
                     decoration: InputDecoration(
                       labelText: 'Marca',
                       filled: true,
-                      fillColor: Colors.grey[100],
+                      fillColor: theme.cardTheme.color,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
                       ),
                     ),
+                    style: theme.textTheme.bodyMedium,
                     validator: (value) => value!.isEmpty ? 'Ingrese la marca' : null,
                   ),
                   const SizedBox(height: 16),
@@ -165,12 +170,13 @@ class _VehiculosScreenState extends State<VehiculosScreen> {
                     decoration: InputDecoration(
                       labelText: 'Modelo',
                       filled: true,
-                      fillColor: Colors.grey[100],
+                      fillColor: theme.cardTheme.color,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
                       ),
                     ),
+                    style: theme.textTheme.bodyMedium,
                     validator: (value) => value!.isEmpty ? 'Ingrese el modelo' : null,
                   ),
                   const SizedBox(height: 16),
@@ -179,12 +185,13 @@ class _VehiculosScreenState extends State<VehiculosScreen> {
                     decoration: InputDecoration(
                       labelText: 'Placa',
                       filled: true,
-                      fillColor: Colors.grey[100],
+                      fillColor: theme.cardTheme.color,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
                       ),
                     ),
+                    style: theme.textTheme.bodyMedium,
                     validator: (value) => value!.isEmpty ? 'Ingrese la placa' : null,
                   ),
                 ],
@@ -194,17 +201,27 @@ class _VehiculosScreenState extends State<VehiculosScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancelar', style: TextStyle(color: Colors.grey)),
+              child: Text(
+                'Cancelar', 
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
+                ),
+              ),
             ),
             ElevatedButton(
               onPressed: _guardarVehiculo,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue[800],
+                backgroundColor: theme.colorScheme.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: const Text('Guardar', style: TextStyle(color: Colors.white)),
+              child: Text(
+                'Guardar', 
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onPrimary,
+                ),
+              ),
             ),
           ],
         );
@@ -214,18 +231,18 @@ class _VehiculosScreenState extends State<VehiculosScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+    final primaryColor = isDarkMode ? Colors.blue[900] : Colors.blue[800];
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: isDarkMode ? Colors.grey[850] : Colors.grey[100],
       appBar: AppBar(
-        title: const Text(
-          'Vehículos',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Colors.blue[800],
+        title: const Text('Vehículos', style: TextStyle(color: Colors.white)),
+        backgroundColor: primaryColor,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
             icon: const Icon(Icons.add, color: Colors.white),
@@ -234,10 +251,12 @@ class _VehiculosScreenState extends State<VehiculosScreen> {
         ],
       ),
       body: _vehiculos.isEmpty
-          ? const Center(
+          ? Center(
               child: Text(
                 'No hay vehículos registrados',
-                style: TextStyle(color: Colors.grey),
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: theme.textTheme.bodyLarge?.color?.withOpacity(0.6),
+                ),
               ),
             )
           : Padding(
@@ -252,6 +271,7 @@ class _VehiculosScreenState extends State<VehiculosScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     margin: const EdgeInsets.only(bottom: 16),
+                    color: isDarkMode ? Colors.grey[800] : Colors.white,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Row(
@@ -259,33 +279,30 @@ class _VehiculosScreenState extends State<VehiculosScreen> {
                         children: [
                           Row(
                             children: [
-                              const Icon(Icons.directions_car, 
-                                  color: Colors.blue, size: 40),
+                              Icon(Icons.directions_car, 
+                                  color: theme.primaryColor, 
+                                  size: 40),
                               const SizedBox(width: 16),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     '${vehiculo.marca} ${vehiculo.modelo}',
-                                    style: TextStyle(
-                                      fontSize: 18,
+                                    style: theme.textTheme.bodyLarge?.copyWith(
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.grey[800],
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     'Color: ${vehiculo.color}',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.grey[600],
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7),
                                     ),
                                   ),
                                   Text(
                                     'Placa: ${vehiculo.placa}',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.grey[600],
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7),
                                     ),
                                   ),
                                 ],
@@ -295,11 +312,13 @@ class _VehiculosScreenState extends State<VehiculosScreen> {
                           Row(
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.edit, color: Colors.blue),
+                                icon: Icon(Icons.edit, 
+                                    color: theme.primaryColor),
                                 onPressed: () => _openAddEditVehiculoDialog(vehiculo),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.delete, color: Colors.red),
+                                icon: Icon(Icons.delete, 
+                                    color: Colors.red),
                                 onPressed: () => _eliminarVehiculo(vehiculo.id),
                               ),
                             ],

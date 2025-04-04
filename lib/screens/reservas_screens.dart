@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:autopark_appmovil/providers/theme_provider.dart';
 
 class EspaciosScreen extends StatelessWidget {
   const EspaciosScreen({super.key});
@@ -9,35 +11,49 @@ class EspaciosScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+    final primaryColor = isDarkMode ? Colors.blue[900] : Colors.blue[800];
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Detalles del Espacio',
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.blue[800],
+        backgroundColor: primaryColor,
+        iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
       ),
+      backgroundColor: isDarkMode ? Colors.grey[850] : Colors.grey[100],
       body: FutureBuilder<DocumentSnapshot>(
-        future:
-            FirebaseFirestore.instance.collection('espacios').doc(docId).get(),
+        future: FirebaseFirestore.instance.collection('espacios').doc(docId).get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(
+                color: theme.primaryColor,
+              ),
+            );
           }
           if (snapshot.hasError) {
-            return const Center(
+            return Center(
               child: Text(
                 'Error al conectar con la base de datos.',
-                style: TextStyle(color: Colors.red, fontSize: 18),
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: Colors.red,
+                ),
               ),
             );
           }
           if (!snapshot.hasData || !snapshot.data!.exists) {
-            return const Center(
+            return Center(
               child: Text(
                 'No se encontraron datos.',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             );
           }
@@ -56,24 +72,23 @@ class EspaciosScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Mensaje de conexión exitosa en la UI
-                const Center(
+                Center(
                   child: Text(
                     '✅ Conexión exitosa con la base de datos',
-                    style: TextStyle(
-                        color: Colors.green,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
-                _buildInfoRow('Capacidad:', '$capacidad'),
+                _buildInfoRow('Capacidad:', '$capacidad', theme),
                 const SizedBox(height: 8),
-                _buildInfoRow('Horario:', formattedDate),
+                _buildInfoRow('Horario:', formattedDate, theme),
                 const SizedBox(height: 8),
-                _buildInfoRow('Tarifa:', '\$${tarifa.toString()}'),
+                _buildInfoRow('Tarifa:', '\$${tarifa.toString()}', theme),
                 const SizedBox(height: 8),
-                _buildInfoRow('Ubicación:', ubicacion),
+                _buildInfoRow('Ubicación:', ubicacion, theme),
               ],
             ),
           );
@@ -82,24 +97,22 @@ class EspaciosScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(String title, String value) {
+  Widget _buildInfoRow(String title, String value, ThemeData theme) {
     return Row(
       children: [
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 18,
+          style: theme.textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.bold,
-            color: Colors.blueAccent,
+            color: theme.primaryColor,
           ),
         ),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             value,
-            style: const TextStyle(
-              fontSize: 18,
-              color: Colors.black87,
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: theme.textTheme.bodyLarge?.color,
             ),
           ),
         ),
