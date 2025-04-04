@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:autopark_appmovil/screens/registro_vehiculo_screen.dart';
 import 'package:autopark_appmovil/services/auth_services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
+import 'package:autopark_appmovil/providers/theme_provider.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -17,23 +19,20 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final AuthService _authService = AuthService();
   String _errorMessage = '';
-  bool _isSignIn = true; // Alternar entre login y registro
-  bool _termsAccepted = false; // Control para términos y condiciones
+  bool _isSignIn = true;
+  bool _termsAccepted = false;
   bool _isLoading = false;
 
   void _navigateToRegistroVehiculo() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => RegistroVehiculoScreen()),
+      MaterialPageRoute(builder: (context) => const RegistroVehiculoScreen()),
     );
   }
 
-  /// **Inicio de sesión**
   void _signIn() async {
     if (!_termsAccepted) {
-      setState(() {
-        _errorMessage = 'Debes aceptar los términos y condiciones primero';
-      });
+      setState(() => _errorMessage = 'Debes aceptar los términos y condiciones primero');
       return;
     }
 
@@ -41,9 +40,7 @@ class _AuthScreenState extends State<AuthScreen> {
     final password = _passwordController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
-      setState(() {
-        _errorMessage = 'Por favor, ingresa ambos campos.';
-      });
+      setState(() => _errorMessage = 'Por favor, ingresa ambos campos.');
       return;
     }
 
@@ -56,18 +53,13 @@ class _AuthScreenState extends State<AuthScreen> {
     if (error == null) {
       _navigateToRegistroVehiculo();
     } else {
-      setState(() {
-        _errorMessage = error;
-      });
+      setState(() => _errorMessage = error);
     }
   }
 
-  /// **Registro de usuario**
   void _signUp() async {
     if (!_termsAccepted) {
-      setState(() {
-        _errorMessage = 'Debes aceptar los términos y condiciones primero';
-      });
+      setState(() => _errorMessage = 'Debes aceptar los términos y condiciones primero');
       return;
     }
 
@@ -75,9 +67,7 @@ class _AuthScreenState extends State<AuthScreen> {
     final password = _passwordController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
-      setState(() {
-        _errorMessage = 'Por favor, ingresa ambos campos.';
-      });
+      setState(() => _errorMessage = 'Por favor, ingresa ambos campos.');
       return;
     }
 
@@ -90,18 +80,13 @@ class _AuthScreenState extends State<AuthScreen> {
     if (error == null) {
       _navigateToRegistroVehiculo();
     } else {
-      setState(() {
-        _errorMessage = error;
-      });
+      setState(() => _errorMessage = error);
     }
   }
 
-  /// **Inicio de sesión con Google**
   Future<void> _signInWithGoogle() async {
     if (!_termsAccepted) {
-      setState(() {
-        _errorMessage = 'Debes aceptar los términos y condiciones primero';
-      });
+      setState(() => _errorMessage = 'Debes aceptar los términos y condiciones primero');
       return;
     }
 
@@ -153,11 +138,11 @@ class _AuthScreenState extends State<AuthScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Términos y Condiciones'),
-        content: SingleChildScrollView(
+        content: const SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
-            children: const [
+            children: [
               Text(
                 'Por favor, lee atentamente nuestros términos y condiciones:',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -204,20 +189,29 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+    final primaryColor = isDarkMode ? Colors.blue[900] : Colors.blue[800];
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Autenticación',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.blue[800],
+        title: const Text('Autenticación', style: TextStyle(color: Colors.white)),
+        backgroundColor: primaryColor,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode, color: Colors.white),
+            onPressed: () => themeProvider.toggleTheme(!isDarkMode),
+          ),
+        ],
       ),
-      backgroundColor: Colors.grey[100],
+      backgroundColor: isDarkMode ? Colors.grey[850] : Colors.grey[100],
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(
-                color: Colors.blue[800],
+                color: theme.primaryColor,
               ),
             )
           : SingleChildScrollView(
@@ -225,31 +219,24 @@ class _AuthScreenState extends State<AuthScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Logo de la aplicación (opcional)
-                  // Image.asset(
-                  //   'assets/img/logo.jpg',
-                  //   height: 120,
-                  //   width: 120,
-                  // ),
-                  // const SizedBox(height: 20),
-                  
                   Card(
                     elevation: 4,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    color: isDarkMode ? Colors.grey[800] : Colors.white,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         children: [
-                          const Icon(Icons.account_circle, color: Colors.blue, size: 60),
+                          Icon(Icons.account_circle, 
+                              color: theme.primaryColor, 
+                              size: 60),
                           const SizedBox(height: 20),
                           Text(
                             _isSignIn ? 'Iniciar Sesión' : 'Crear Cuenta',
-                            style: TextStyle(
-                              fontSize: 22,
+                            style: theme.textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: Colors.grey[800],
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -257,12 +244,21 @@ class _AuthScreenState extends State<AuthScreen> {
                             controller: _emailController,
                             decoration: InputDecoration(
                               labelText: 'Correo Electrónico',
+                              labelStyle: TextStyle(
+                                color: isDarkMode ? Colors.grey[400] : null),
                               hintText: 'Ingresa tu correo electrónico',
+                              hintStyle: TextStyle(
+                                color: isDarkMode ? Colors.grey[500] : null),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
-                              prefixIcon: const Icon(Icons.email, color: Colors.blue),
+                              prefixIcon: Icon(Icons.email, 
+                                  color: theme.primaryColor),
+                              filled: isDarkMode,
+                              fillColor: isDarkMode ? Colors.grey[700] : null,
                             ),
+                            style: TextStyle(
+                              color: isDarkMode ? Colors.white : Colors.black),
                           ),
                           const SizedBox(height: 16),
                           TextField(
@@ -270,30 +266,42 @@ class _AuthScreenState extends State<AuthScreen> {
                             obscureText: true,
                             decoration: InputDecoration(
                               labelText: 'Contraseña',
+                              labelStyle: TextStyle(
+                                color: isDarkMode ? Colors.grey[400] : null),
                               hintText: 'Ingresa tu contraseña',
+                              hintStyle: TextStyle(
+                                color: isDarkMode ? Colors.grey[500] : null),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
-                              prefixIcon: const Icon(Icons.lock, color: Colors.blue),
+                              prefixIcon: Icon(Icons.lock, 
+                                  color: theme.primaryColor),
+                              filled: isDarkMode,
+                              fillColor: isDarkMode ? Colors.grey[700] : null,
                             ),
+                            style: TextStyle(
+                              color: isDarkMode ? Colors.white : Colors.black),
                           ),
                           if (_errorMessage.isNotEmpty) ...[
                             const SizedBox(height: 16),
                             Container(
                               padding: const EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
-                                color: Colors.red[50],
+                                color: isDarkMode ? Colors.red[900] : Colors.red[50],
                                 borderRadius: BorderRadius.circular(8.0),
-                                border: Border.all(color: Colors.red[200]!),
+                                border: Border.all(
+                                  color: isDarkMode ? Colors.red[800]! : Colors.red[200]!),
                               ),
                               child: Row(
                                 children: [
-                                  const Icon(Icons.error_outline, color: Colors.red),
+                                  Icon(Icons.error_outline, 
+                                      color: isDarkMode ? Colors.red[200] : Colors.red),
                                   const SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
                                       _errorMessage,
-                                      style: const TextStyle(color: Colors.red),
+                                      style: TextStyle(
+                                        color: isDarkMode ? Colors.red[200] : Colors.red),
                                     ),
                                   ),
                                 ],
@@ -301,17 +309,19 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                           ],
                           const SizedBox(height: 16),
-                          // Términos y condiciones
                           Row(
                             children: [
-                              Checkbox(
-                                value: _termsAccepted,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _termsAccepted = value ?? false;
-                                  });
-                                },
-                                activeColor: Colors.blue[800],
+                              Theme(
+                                data: Theme.of(context).copyWith(
+                                  unselectedWidgetColor: isDarkMode ? Colors.grey[400] : null,
+                                ),
+                                child: Checkbox(
+                                  value: _termsAccepted,
+                                  onChanged: (value) {
+                                    setState(() => _termsAccepted = value ?? false);
+                                  },
+                                  activeColor: theme.primaryColor,
+                                ),
                               ),
                               Expanded(
                                 child: GestureDetector(
@@ -320,14 +330,14 @@ class _AuthScreenState extends State<AuthScreen> {
                                     text: TextSpan(
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: Colors.grey[700],
+                                        color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
                                       ),
-                                      children: const [
+                                      children: [
                                         TextSpan(text: 'Acepto los '),
                                         TextSpan(
                                           text: 'Términos y Condiciones',
                                           style: TextStyle(
-                                            color: Colors.blue,
+                                            color: theme.primaryColor,
                                             decoration: TextDecoration.underline,
                                           ),
                                         ),
@@ -335,7 +345,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                         TextSpan(
                                           text: 'Política de Privacidad',
                                           style: TextStyle(
-                                            color: Colors.blue,
+                                            color: theme.primaryColor,
                                             decoration: TextDecoration.underline,
                                           ),
                                         ),
@@ -350,13 +360,12 @@ class _AuthScreenState extends State<AuthScreen> {
                           ElevatedButton(
                             onPressed: _isSignIn ? _signIn : _signUp,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue[800],
+                              backgroundColor: theme.primaryColor,
                               foregroundColor: Colors.white,
                               minimumSize: const Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
-                              disabledBackgroundColor: Colors.grey[300],
                             ),
                             child: Text(_isSignIn ? 'Iniciar Sesión' : 'Crear Cuenta'),
                           ),
@@ -370,7 +379,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             },
                             child: Text(
                               _isSignIn ? '¿No tienes cuenta? Crea una' : '¿Ya tienes cuenta? Inicia sesión',
-                              style: const TextStyle(color: Colors.blue),
+                              style: TextStyle(color: theme.primaryColor),
                             ),
                           ),
                         ],
@@ -383,6 +392,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    color: isDarkMode ? Colors.grey[800] : Colors.white,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
@@ -391,7 +401,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             'O continúa con',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.grey[600],
+                              color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -401,19 +411,16 @@ class _AuthScreenState extends State<AuthScreen> {
                             label: const Text('Iniciar sesión con Google'),
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(double.infinity, 50),
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.black,
+                              backgroundColor: isDarkMode ? Colors.grey[700] : Colors.white,
+                              foregroundColor: isDarkMode ? Colors.white : Colors.black,
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
-                                side: BorderSide(color: Colors.grey[300]!),
+                                side: BorderSide(
+                                  color: isDarkMode ? Colors.grey[600]! : Colors.grey[300]!),
                               ),
-                              disabledBackgroundColor: Colors.grey[200],
-                              disabledForegroundColor: Colors.grey,
                             ),
                           ),
-                          // Alternativamente, puedes agregar aquí el botón con la imagen del logo de Google
-                          // como en el código original si prefieres
                         ],
                       ),
                     ),

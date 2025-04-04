@@ -3,115 +3,141 @@ import 'package:autopark_appmovil/services/firestore_services.dart';
 import 'package:flutter/material.dart';
 import 'package:autopark_appmovil/screens/parking_owner_screen.dart';
 import 'package:autopark_appmovil/screens/no_data_found_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:autopark_appmovil/providers/theme_provider.dart';
 
 class FloorOverviewScreen extends StatefulWidget {
   const FloorOverviewScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _FloorOverviewScreenState createState() => _FloorOverviewScreenState();
 }
+
 class _FloorOverviewScreenState extends State<FloorOverviewScreen> {
   final FirestoreServices _firestoreServices = FirestoreServices();
 
-  // Método para agregar un nuevo piso
   void _agregarPiso() {
-  TextEditingController nombreController = TextEditingController();
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text("Agregar Piso"),
-        content: TextField(
-          controller: nombreController,
-          decoration: const InputDecoration(hintText: "Nombre del piso"),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancelar"),
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+    
+    TextEditingController nombreController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            dialogBackgroundColor: isDarkMode ? Colors.grey[800] : Colors.white,
           ),
-          TextButton(
-            onPressed: () async {
-              if (nombreController.text.isNotEmpty) {
-                // Pasar el mapa con el nombre del piso
-                await _firestoreServices.agregarPiso('piso', {
-                  'nombre': nombreController.text,
-                });
-              }
-              Navigator.pop(context);
-            },
-            child: const Text("Agregar"),
+          child: AlertDialog(
+            title: Text("Agregar Piso", style: TextStyle(color: isDarkMode ? Colors.white : Colors.black)),
+            content: TextField(
+              controller: nombreController,
+              decoration: InputDecoration(
+                hintText: "Nombre del piso",
+                hintStyle: TextStyle(color: isDarkMode ? Colors.grey[400] : null),
+              ),
+              style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("Cancelar", style: TextStyle(color: Theme.of(context).primaryColor)),
+              ),
+              TextButton(
+                onPressed: () async {
+                  if (nombreController.text.isNotEmpty) {
+                    await _firestoreServices.agregarPiso('piso', {
+                      'nombre': nombreController.text,
+                    });
+                  }
+                  Navigator.pop(context);
+                },
+                child: Text("Agregar", style: TextStyle(color: Theme.of(context).primaryColor)),
+              ),
+            ],
           ),
-        ],
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
-
-  // Método para editar un piso
   void _editarPiso(FloorModel piso) {
-  TextEditingController nombreController = TextEditingController(text: piso.nombre);
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text("Editar Piso"),
-        content: TextField(
-          controller: nombreController,
-          decoration: const InputDecoration(hintText: "Nuevo nombre del piso"),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancelar"),
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+    
+    TextEditingController nombreController = TextEditingController(text: piso.nombre);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            dialogBackgroundColor: isDarkMode ? Colors.grey[800] : Colors.white,
           ),
-          TextButton(
-            onPressed: () async {
-              // Pasar el docId y los datos para editar el piso
-              await _firestoreServices.editarPiso('piso', piso.id, {
-                'nombre': nombreController.text, // Actualizar el nombre
-              });
-              Navigator.pop(context);
-            },
-            child: const Text("Guardar"),
+          child: AlertDialog(
+            title: Text("Editar Piso", style: TextStyle(color: isDarkMode ? Colors.white : Colors.black)),
+            content: TextField(
+              controller: nombreController,
+              decoration: InputDecoration(
+                hintText: "Nuevo nombre del piso",
+                hintStyle: TextStyle(color: isDarkMode ? Colors.grey[400] : null),
+              ),
+              style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("Cancelar", style: TextStyle(color: Theme.of(context).primaryColor)),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await _firestoreServices.editarPiso('piso', piso.id, {
+                    'nombre': nombreController.text,
+                  });
+                  Navigator.pop(context);
+                },
+                child: Text("Guardar", style: TextStyle(color: Theme.of(context).primaryColor)),
+              ),
+            ],
           ),
-        ],
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
-
-  // Método para eliminar un piso
   void _eliminarPiso(FloorModel piso) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text("Confirmar Eliminación"),
-        content: const Text("¿Estás seguro de que deseas eliminar este piso?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancelar"),
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+    
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            dialogBackgroundColor: isDarkMode ? Colors.grey[800] : Colors.white,
           ),
-          TextButton(
-            onPressed: () async {
-              await _firestoreServices.eliminarPiso('piso', piso.id); // Pasar la colección y el docId
-              Navigator.pop(context);
-            },
-            child: const Text("Eliminar"),
+          child: AlertDialog(
+            title: Text("Confirmar Eliminación", style: TextStyle(color: isDarkMode ? Colors.white : Colors.black)),
+            content: Text("¿Estás seguro de que deseas eliminar este piso?", 
+                style: TextStyle(color: isDarkMode ? Colors.grey[300] : Colors.grey[800])),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("Cancelar", style: TextStyle(color: Theme.of(context).primaryColor)),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await _firestoreServices.eliminarPiso('piso', piso.id);
+                  Navigator.pop(context);
+                },
+                child: Text("Eliminar", style: TextStyle(color: Colors.red)),
+              ),
+            ],
           ),
-        ],
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
-
-  // Método para manejar el clic en un piso
   void _onPisoClicked(FloorModel piso) {
     if (piso.nombre == 'Piso 1') {
       Navigator.push(
@@ -134,14 +160,17 @@ class _FloorOverviewScreenState extends State<FloorOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+    final primaryColor = isDarkMode ? Colors.blue[900] : Colors.blue[800];
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Pisos',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.blue[800],
+        title: const Text('Pisos', style: TextStyle(color: Colors.white)),
+        backgroundColor: primaryColor,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
             icon: const Icon(Icons.add, color: Colors.white),
@@ -149,20 +178,22 @@ class _FloorOverviewScreenState extends State<FloorOverviewScreen> {
           ),
         ],
       ),
-      backgroundColor: Colors.grey[100],
+      backgroundColor: isDarkMode ? Colors.grey[850] : Colors.grey[100],
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: StreamBuilder<List<FloorModel>>(
           stream: _firestoreServices.obtenerPisos(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
+              return Center(child: Text('Error: ${snapshot.error}', 
+                  style: TextStyle(color: isDarkMode ? Colors.white : Colors.black)));
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator(color: theme.primaryColor));
             }
             if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(child: Text("No hay pisos disponibles"));
+              return Center(child: Text("No hay pisos disponibles", 
+                  style: TextStyle(color: isDarkMode ? Colors.white : Colors.black)));
             }
             return ListView.builder(
               itemCount: snapshot.data!.length,
@@ -171,6 +202,8 @@ class _FloorOverviewScreenState extends State<FloorOverviewScreen> {
                 return _buildCard(
                   context: context,
                   piso: piso,
+                  isDarkMode: isDarkMode,
+                  theme: theme,
                 );
               },
             );
@@ -183,6 +216,8 @@ class _FloorOverviewScreenState extends State<FloorOverviewScreen> {
   Widget _buildCard({
     required BuildContext context,
     required FloorModel piso,
+    required bool isDarkMode,
+    required ThemeData theme,
   }) {
     return GestureDetector(
       onTap: () => _onPisoClicked(piso),
@@ -191,6 +226,7 @@ class _FloorOverviewScreenState extends State<FloorOverviewScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
+        color: isDarkMode ? Colors.grey[800] : Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
@@ -198,25 +234,22 @@ class _FloorOverviewScreenState extends State<FloorOverviewScreen> {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.location_on, color: Colors.blue, size: 40),
+                  Icon(Icons.location_on, color: theme.primaryColor, size: 40),
                   const SizedBox(width: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         piso.nombre,
-                        style: TextStyle(
-                          fontSize: 18,
+                        style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.grey[800],
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'Ver más detalles',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[600],
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
                         ),
                       ),
                     ],
@@ -226,7 +259,7 @@ class _FloorOverviewScreenState extends State<FloorOverviewScreen> {
               Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.blue),
+                    icon: Icon(Icons.edit, color: theme.primaryColor),
                     onPressed: () => _editarPiso(piso),
                   ),
                   IconButton(

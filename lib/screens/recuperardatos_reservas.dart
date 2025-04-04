@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:autopark_appmovil/providers/theme_provider.dart';
 
 class RecuperarDatosReservasScreen extends StatefulWidget {
   const RecuperarDatosReservasScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _RecuperarDatosReservasScreenState createState() => 
       _RecuperarDatosReservasScreenState();
 }
@@ -74,25 +75,42 @@ class _RecuperarDatosReservasScreenState
   }
 
   void _confirmDeleteReservation(String docId) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text("Confirmar Eliminación"),
-          content: const Text("¿Estás seguro de que deseas eliminar esta reserva?"),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancelar"),
+        return Theme(
+          data: Theme.of(context).copyWith(
+            dialogBackgroundColor: isDarkMode ? Colors.grey[800] : Colors.white,
+          ),
+          child: AlertDialog(
+            title: Text(
+              "Confirmar Eliminación",
+              style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
             ),
-            TextButton(
-              onPressed: () async {
-                await _deleteReservation(docId);
-                Navigator.pop(context);
-              },
-              child: const Text("Eliminar", style: TextStyle(color: Colors.red)),
+            content: Text(
+              "¿Estás seguro de que deseas eliminar esta reserva?",
+              style: TextStyle(color: isDarkMode ? Colors.grey[300] : Colors.grey[800]),
             ),
-          ],
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  "Cancelar",
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await _deleteReservation(docId);
+                  Navigator.pop(context);
+                },
+                child: const Text("Eliminar", style: TextStyle(color: Colors.red)),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -118,29 +136,42 @@ class _RecuperarDatosReservasScreenState
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+    final primaryColor = isDarkMode ? Colors.blue[900] : Colors.blue[800];
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Reservas',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.blue[800],
+        title: const Text('Reservas', style: TextStyle(color: Colors.white)),
+        backgroundColor: primaryColor,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
-      backgroundColor: Colors.grey[100],
+      backgroundColor: isDarkMode ? Colors.grey[850] : Colors.grey[100],
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
+            ? Center(child: CircularProgressIndicator(color: theme.primaryColor))
             : _reservations.isEmpty
-                ? const Center(child: Text("No hay reservas disponibles"))
+                ? Center(
+                    child: Text(
+                      "No hay reservas disponibles",
+                      style: TextStyle(color: theme.textTheme.bodyLarge?.color),
+                    ),
+                  )
                 : ListView.separated(
                     itemCount: _reservations.length,
                     separatorBuilder: (context, index) => 
                         const SizedBox(height: 16),
                     itemBuilder: (context, index) {
                       final entry = _reservations.entries.elementAt(index);
-                      return _buildReservationCard(entry.key, entry.value);
+                      return _buildReservationCard(
+                        entry.key, 
+                        entry.value,
+                        isDarkMode,
+                        theme,
+                      );
                     },
                   ),
       ),
@@ -150,12 +181,15 @@ class _RecuperarDatosReservasScreenState
   Widget _buildReservationCard(
     DateTime date,
     List<Map<String, dynamic>> reservations,
+    bool isDarkMode,
+    ThemeData theme,
   ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
+      color: isDarkMode ? Colors.grey[800] : Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -163,15 +197,13 @@ class _RecuperarDatosReservasScreenState
           children: [
             Row(
               children: [
-                const Icon(Icons.calendar_today, 
-                    color: Colors.blue, size: 24),
+                Icon(Icons.calendar_today, 
+                    color: theme.primaryColor, size: 24),
                 const SizedBox(width: 16),
                 Text(
                   _formatDate(date),
-                  style: TextStyle(
-                    fontSize: 18,
+                  style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey[800],
                   ),
                 ),
               ],
@@ -185,9 +217,8 @@ class _RecuperarDatosReservasScreenState
                   children: [
                     Text(
                       'Hora: ${reserva['hora']}',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[600],
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
                       ),
                     ),
                     IconButton(

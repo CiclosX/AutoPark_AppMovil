@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:autopark_appmovil/screens/parking_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:autopark_appmovil/providers/theme_provider.dart';
 
 class ParkingOverviewScreen extends StatefulWidget {
   const ParkingOverviewScreen({super.key});
@@ -16,94 +18,149 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
   ];
 
   void _agregarEspacio() {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+    
     TextEditingController nombreController = TextEditingController();
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text("Agregar Espacio"),
-          content: TextField(
-            controller: nombreController,
-            decoration: const InputDecoration(hintText: "Nombre del espacio"),
+        return Theme(
+          data: Theme.of(context).copyWith(
+            dialogBackgroundColor: isDarkMode ? Colors.grey[800] : Colors.white,
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancelar"),
+          child: AlertDialog(
+            title: Text(
+              "Agregar Espacio",
+              style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
             ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  espacios.add({
-                    'id': 'espacio_${espacios.length + 1}',
-                    'nombre': nombreController.text.isNotEmpty ? nombreController.text : 'Espacio ${espacios.length + 1}',
-                    'cajones': 5,
-                    'color': Colors.blue,
+            content: TextField(
+              controller: nombreController,
+              decoration: InputDecoration(
+                hintText: "Nombre del espacio",
+                hintStyle: TextStyle(color: isDarkMode ? Colors.grey[400] : null),
+              ),
+              style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  "Cancelar",
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    espacios.add({
+                      'id': 'espacio_${espacios.length + 1}',
+                      'nombre': nombreController.text.isNotEmpty 
+                          ? nombreController.text 
+                          : 'Espacio ${espacios.length + 1}',
+                      'cajones': 5,
+                      'color': Colors.blue,
+                    });
                   });
-                });
-                Navigator.pop(context);
-              },
-              child: const Text("Agregar"),
-            ),
-          ],
+                  Navigator.pop(context);
+                },
+                child: const Text("Agregar"),
+              ),
+            ],
+          ),
         );
       },
     );
   }
 
   void _editarEspacio(int index) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+    
     TextEditingController nombreController = TextEditingController(text: espacios[index]['nombre']);
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text("Editar Espacio"),
-          content: TextField(
-            controller: nombreController,
-            decoration: const InputDecoration(hintText: "Nuevo nombre del espacio"),
+        return Theme(
+          data: Theme.of(context).copyWith(
+            dialogBackgroundColor: isDarkMode ? Colors.grey[800] : Colors.white,
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancelar"),
+          child: AlertDialog(
+            title: Text(
+              "Editar Espacio",
+              style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
             ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  espacios[index]['nombre'] = nombreController.text;
-                });
-                Navigator.pop(context);
-              },
-              child: const Text("Guardar"),
+            content: TextField(
+              controller: nombreController,
+              decoration: InputDecoration(
+                hintText: "Nuevo nombre del espacio",
+                hintStyle: TextStyle(color: isDarkMode ? Colors.grey[400] : null),
+              ),
+              style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
             ),
-          ],
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  "Cancelar",
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    espacios[index]['nombre'] = nombreController.text;
+                  });
+                  Navigator.pop(context);
+                },
+                child: const Text("Guardar"),
+              ),
+            ],
+          ),
         );
       },
     );
   }
 
   void _eliminarEspacio(int index) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+    
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text("Confirmar Eliminación"),
-          content: const Text("¿Estás seguro de que deseas eliminar este espacio?"),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancelar"),
+        return Theme(
+          data: Theme.of(context).copyWith(
+            dialogBackgroundColor: isDarkMode ? Colors.grey[800] : Colors.white,
+          ),
+          child: AlertDialog(
+            title: Text(
+              "Confirmar Eliminación",
+              style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
             ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  espacios.removeAt(index);
-                });
-                Navigator.pop(context);
-              },
-              child: const Text("Eliminar"),
+            content: Text(
+              "¿Estás seguro de que deseas eliminar este espacio?",
+              style: TextStyle(color: isDarkMode ? Colors.grey[300] : Colors.grey[800]),
             ),
-          ],
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  "Cancelar",
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    espacios.removeAt(index);
+                  });
+                  Navigator.pop(context);
+                },
+                child: const Text("Eliminar", style: TextStyle(color: Colors.red)),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -111,14 +168,17 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+    final primaryColor = isDarkMode ? Colors.blue[900] : Colors.blue[800];
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Lugares',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.blue[800],
+        title: const Text('Lugares', style: TextStyle(color: Colors.white)),
+        backgroundColor: primaryColor,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
             icon: const Icon(Icons.add, color: Colors.white),
@@ -126,19 +186,21 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
           ),
         ],
       ),
-      backgroundColor: Colors.grey[100],
+      backgroundColor: isDarkMode ? Colors.grey[850] : Colors.grey[100],
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(espacios.length, (index) {
+        child: ListView.builder(
+          itemCount: espacios.length,
+          itemBuilder: (context, index) {
             return _buildCard(
               context: context,
               index: index,
-              title: ' ${espacios[index]['nombre']}',
+              title: espacios[index]['nombre'],
               subtitle: 'Ver más detalles',
               icon: Icons.local_parking,
               color: espacios[index]['color'],
+              isDarkMode: isDarkMode,
+              theme: theme,
               onPressed: () {
                 Navigator.push(
                   context,
@@ -151,12 +213,11 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
                 );
               },
             );
-          }),
+          },
         ),
       ),
     );
   }
-
 
   Widget _buildCard({
     required BuildContext context,
@@ -165,6 +226,8 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
     required String subtitle,
     required IconData icon,
     required Color color,
+    required bool isDarkMode,
+    required ThemeData theme,
     required VoidCallback onPressed,
   }) {
     return GestureDetector(
@@ -174,6 +237,8 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
+        color: isDarkMode ? Colors.grey[800] : Colors.white,
+        margin: const EdgeInsets.only(bottom: 16),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
@@ -188,18 +253,15 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
                     children: [
                       Text(
                         title,
-                        style: TextStyle(
-                          fontSize: 18,
+                        style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.grey[800],
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         subtitle,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[600],
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
                         ),
                       ),
                     ],
@@ -209,7 +271,7 @@ class _ParkingOverviewScreenState extends State<ParkingOverviewScreen> {
               Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.blue),
+                    icon: Icon(Icons.edit, color: theme.primaryColor),
                     onPressed: () => _editarEspacio(index),
                   ),
                   IconButton(

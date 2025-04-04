@@ -1,8 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:autopark_appmovil/services/auth_services.dart';
 import 'package:provider/provider.dart';
+import 'package:autopark_appmovil/providers/theme_provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -10,7 +11,10 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
     final currentUserIdStream = authService.user;
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+    final primaryColor = isDarkMode ? Colors.blue[900] : Colors.blue[800];
 
     return Scaffold(
       appBar: AppBar(
@@ -18,18 +22,28 @@ class ProfileScreen extends StatelessWidget {
           'Mi Perfil',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.blue[800],
+        backgroundColor: primaryColor,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
-      backgroundColor: Colors.grey[100],
+      backgroundColor: isDarkMode ? Colors.grey[850] : Colors.grey[100],
       body: StreamBuilder<User?>(
         stream: currentUserIdStream,
         builder: (context, userSnapshot) {
           if (userSnapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(
+                color: primaryColor,
+              ),
+            );
           }
           if (!userSnapshot.hasData || userSnapshot.data == null) {
-            return const Center(child: Text('No se encontró información del usuario.'));
+            return Center(
+              child: Text(
+                'No se encontró información del usuario.',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            );
           }
 
           final currentUserId = userSnapshot.data!.uid;
@@ -41,10 +55,19 @@ class ProfileScreen extends StatelessWidget {
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: primaryColor,
+                  ),
+                );
               }
               if (!snapshot.hasData || !snapshot.data!.exists) {
-                return const Center(child: Text('No se encontró información del usuario.'));
+                return Center(
+                  child: Text(
+                    'No se encontró información del usuario.',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                );
               }
 
               var userData = snapshot.data!.data() as Map<String, dynamic>;
@@ -54,7 +77,7 @@ class ProfileScreen extends StatelessWidget {
               String foto = userData['foto'] ?? '';
               Timestamp? creadoEn = userData['creadoEn'] as Timestamp?;
 
-              return Padding(
+              return SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -62,7 +85,7 @@ class ProfileScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     CircleAvatar(
                       radius: 50,
-                      backgroundColor: Colors.blue,
+                      backgroundColor: primaryColor,
                       backgroundImage: foto.isNotEmpty 
                           ? NetworkImage(foto) 
                           : null,
@@ -73,19 +96,14 @@ class ProfileScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     Text(
                       nombre,
-                      style: TextStyle(
-                        fontSize: 24,
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: Colors.grey[800],
                       ),
                     ),
                     const SizedBox(height: 10),
                     Text(
                       email,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[600],
-                      ),
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     const SizedBox(height: 30),
                     Card(
@@ -93,6 +111,7 @@ class ProfileScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
+                      color: isDarkMode ? Colors.grey[800] : Colors.white,
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
@@ -102,11 +121,20 @@ class ProfileScreen extends StatelessWidget {
                               label: 'Rol', 
                               value: rol,
                             ),
-                            const Divider(),
+                            const Divider(height: 20),
                             _buildProfileInfoRow(
                               context: context,
                               label: 'Miembro desde', 
                               value: creadoEn?.toDate().toString().split(' ')[0] ?? 'Fecha no disponible',
+                            ),
+                            const Divider(height: 20),
+                            _buildThemeSwitch(
+                              context: context,
+                              isDarkMode: isDarkMode,
+                              primaryColor: primaryColor ?? Colors.blue,
+                              onChanged: (value) {
+                                themeProvider.toggleTheme(value);
+                              },
                             ),
                           ],
                         ),
@@ -119,25 +147,29 @@ class ProfileScreen extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
+                        color: isDarkMode ? Colors.grey[800] : Colors.white,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(Icons.admin_panel_settings, color: Colors.blue, size: 40),
+                              Icon(
+                                Icons.admin_panel_settings, 
+                                color: primaryColor, 
+                                size: 40,
+                              ),
                               const SizedBox(width: 16),
                               Text(
                                 'ADMINISTRADOR',
-                                style: TextStyle(
-                                  color: Colors.grey[800],
+                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18,
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ),
+                    const SizedBox(height: 20),
                   ],
                 ),
               );
@@ -160,18 +192,42 @@ class ProfileScreen extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Colors.grey[800],
             ),
           ),
           Text(
             value,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildThemeSwitch({
+    required BuildContext context,
+    required bool isDarkMode,
+    required Color primaryColor,
+    required ValueChanged<bool> onChanged,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Modo Oscuro',
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              fontWeight: FontWeight.bold,
             ),
+          ),
+          Switch(
+            value: isDarkMode,
+            onChanged: onChanged,
+            activeColor: primaryColor,
+            inactiveThumbColor: Colors.grey[300],
+            inactiveTrackColor: Colors.grey[400],
           ),
         ],
       ),
