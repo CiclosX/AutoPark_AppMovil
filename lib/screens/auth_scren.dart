@@ -191,7 +191,8 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
-    final primaryColor = isDarkMode ? Colors.blue[900] : Colors.blue[800];
+    // Definimos el color azul principal
+    final primaryColor = Colors.blue;
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -211,7 +212,7 @@ class _AuthScreenState extends State<AuthScreen> {
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(
-                color: theme.primaryColor,
+                color: primaryColor,
               ),
             )
           : SingleChildScrollView(
@@ -230,13 +231,14 @@ class _AuthScreenState extends State<AuthScreen> {
                       child: Column(
                         children: [
                           Icon(Icons.account_circle, 
-                              color: theme.primaryColor, 
+                              color: primaryColor, 
                               size: 60),
                           const SizedBox(height: 20),
                           Text(
                             _isSignIn ? 'Iniciar Sesión' : 'Crear Cuenta',
                             style: theme.textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
+                              color: primaryColor,
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -251,9 +253,14 @@ class _AuthScreenState extends State<AuthScreen> {
                                 color: isDarkMode ? Colors.grey[500] : null),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(color: primaryColor),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(color: primaryColor, width: 2),
                               ),
                               prefixIcon: Icon(Icons.email, 
-                                  color: theme.primaryColor),
+                                  color: primaryColor),
                               filled: isDarkMode,
                               fillColor: isDarkMode ? Colors.grey[700] : null,
                             ),
@@ -273,9 +280,14 @@ class _AuthScreenState extends State<AuthScreen> {
                                 color: isDarkMode ? Colors.grey[500] : null),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(color: primaryColor),
                               ),
-                              prefixIcon: Icon(Icons.lock, 
-                                  color: theme.primaryColor),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(color: primaryColor, width: 2),
+                              ),
+                              prefixIcon: Icon(Icons.lock,
+                                  color: primaryColor),
                               filled: isDarkMode,
                               fillColor: isDarkMode ? Colors.grey[700] : null,
                             ),
@@ -320,7 +332,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                   onChanged: (value) {
                                     setState(() => _termsAccepted = value ?? false);
                                   },
-                                  activeColor: theme.primaryColor,
+                                  activeColor: primaryColor,
                                 ),
                               ),
                               Expanded(
@@ -337,7 +349,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                         TextSpan(
                                           text: 'Términos y Condiciones',
                                           style: TextStyle(
-                                            color: theme.primaryColor,
+                                            color: primaryColor,
                                             decoration: TextDecoration.underline,
                                           ),
                                         ),
@@ -345,7 +357,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                         TextSpan(
                                           text: 'Política de Privacidad',
                                           style: TextStyle(
-                                            color: theme.primaryColor,
+                                            color: primaryColor,
                                             decoration: TextDecoration.underline,
                                           ),
                                         ),
@@ -360,7 +372,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           ElevatedButton(
                             onPressed: _isSignIn ? _signIn : _signUp,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: theme.primaryColor,
+                              backgroundColor: primaryColor,
                               foregroundColor: Colors.white,
                               minimumSize: const Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(
@@ -379,7 +391,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             },
                             child: Text(
                               _isSignIn ? '¿No tienes cuenta? Crea una' : '¿Ya tienes cuenta? Inicia sesión',
-                              style: TextStyle(color: theme.primaryColor),
+                              style: TextStyle(color: primaryColor),
                             ),
                           ),
                         ],

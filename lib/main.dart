@@ -1,5 +1,5 @@
 import 'package:autopark_appmovil/screens/auth_scren.dart';
-import 'package:autopark_appmovil/screens/home_screens.dart';
+import 'package:autopark_appmovil/screens/home_screen.dart';
 import 'package:autopark_appmovil/services/realtime_db_services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
                 backgroundColor: Colors.black87,
                 foregroundColor: Colors.white,
               ),
-              cardTheme: CardTheme(
+              cardTheme: CardThemeData(
                 elevation: 4,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
