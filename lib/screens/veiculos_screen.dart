@@ -21,6 +21,7 @@ class VehiculosScreen extends StatefulWidget {
   const VehiculosScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _VehiculosScreenState createState() => _VehiculosScreenState();
 }
 
@@ -121,43 +122,89 @@ class _VehiculosScreenState extends State<VehiculosScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(vehiculo == null ? 'Agregar Vehículo' : 'Editar Vehículo'),
+          title: Text(
+            vehiculo == null ? 'Agregar Vehículo' : 'Editar Vehículo',
+            style: TextStyle(color: Colors.grey[800]),
+          ),
           content: Form(
             key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: _colorController,
-                  decoration: const InputDecoration(labelText: 'Color'),
-                  validator: (value) => value!.isEmpty ? 'Ingrese el color' : null,
-                ),
-                TextFormField(
-                  controller: _marcaController,
-                  decoration: const InputDecoration(labelText: 'Marca'),
-                  validator: (value) => value!.isEmpty ? 'Ingrese la marca' : null,
-                ),
-                TextFormField(
-                  controller: _modeloController,
-                  decoration: const InputDecoration(labelText: 'Modelo'),
-                  validator: (value) => value!.isEmpty ? 'Ingrese el modelo' : null,
-                ),
-                TextFormField(
-                  controller: _placaController,
-                  decoration: const InputDecoration(labelText: 'Placa'),
-                  validator: (value) => value!.isEmpty ? 'Ingrese la placa' : null,
-                ),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: _colorController,
+                    decoration: InputDecoration(
+                      labelText: 'Color',
+                      filled: true,
+                      fillColor: Colors.grey[100],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    validator: (value) => value!.isEmpty ? 'Ingrese el color' : null,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _marcaController,
+                    decoration: InputDecoration(
+                      labelText: 'Marca',
+                      filled: true,
+                      fillColor: Colors.grey[100],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    validator: (value) => value!.isEmpty ? 'Ingrese la marca' : null,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _modeloController,
+                    decoration: InputDecoration(
+                      labelText: 'Modelo',
+                      filled: true,
+                      fillColor: Colors.grey[100],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    validator: (value) => value!.isEmpty ? 'Ingrese el modelo' : null,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _placaController,
+                    decoration: InputDecoration(
+                      labelText: 'Placa',
+                      filled: true,
+                      fillColor: Colors.grey[100],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    validator: (value) => value!.isEmpty ? 'Ingrese la placa' : null,
+                  ),
+                ],
+              ),
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancelar'),
+              child: const Text('Cancelar', style: TextStyle(color: Colors.grey)),
             ),
             ElevatedButton(
               onPressed: _guardarVehiculo,
-              child: const Text('Guardar'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue[800],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: const Text('Guardar', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -168,49 +215,101 @@ class _VehiculosScreenState extends State<VehiculosScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('Vehículos'),
+        title: const Text(
+          'Vehículos',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.blue[800],
+        elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: const Icon(Icons.add, color: Colors.white),
             onPressed: () => _openAddEditVehiculoDialog(),
           ),
         ],
       ),
       body: _vehiculos.isEmpty
-          ? const Center(child: Text('No hay vehículos registrados'))
-          : ListView.builder(
-              itemCount: _vehiculos.length,
-              itemBuilder: (context, index) {
-                final vehiculo = _vehiculos[index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: ListTile(
-                    leading: const Icon(Icons.directions_car, size: 40),
-                    title: Text('${vehiculo.marca} ${vehiculo.modelo}'),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Color: ${vehiculo.color}'),
-                        Text('Placa: ${vehiculo.placa}'),
-                      ],
+          ? const Center(
+              child: Text(
+                'No hay vehículos registrados',
+                style: TextStyle(color: Colors.grey),
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListView.builder(
+                itemCount: _vehiculos.length,
+                itemBuilder: (context, index) {
+                  final vehiculo = _vehiculos[index];
+                  return Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () => _openAddEditVehiculoDialog(vehiculo),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () => _eliminarVehiculo(vehiculo.id),
-                        ),
-                      ],
+                    margin: const EdgeInsets.only(bottom: 16),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.directions_car, 
+                                  color: Colors.blue, size: 40),
+                              const SizedBox(width: 16),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${vehiculo.marca} ${vehiculo.modelo}',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[800],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'Color: ${vehiculo.color}',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  Text(
+                                    'Placa: ${vehiculo.placa}',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.edit, color: Colors.blue),
+                                onPressed: () => _openAddEditVehiculoDialog(vehiculo),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete, color: Colors.red),
+                                onPressed: () => _eliminarVehiculo(vehiculo.id),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
     );
   }

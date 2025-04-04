@@ -1,11 +1,12 @@
 import 'package:autopark_appmovil/models/floor_model.dart';
 import 'package:autopark_appmovil/models/tarifa_model.dart';
-import 'package:autopark_appmovil/models/user_model.dart';
+import 'package:autopark_appmovil/models/usuario.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreServices {
   static final FirestoreServices _instance = FirestoreServices._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   factory FirestoreServices() {
     return _instance;
@@ -13,27 +14,28 @@ class FirestoreServices {
 
   FirestoreServices._internal();
 
-  Stream<List<UserModel>> getUser(String collection) {
-    return _firestore.collection(collection).snapshots().map((snapshot) {
-      return snapshot.docs
-          .map((doc) => UserModel.fromDocumentSnapshot(doc))
-          .toList();
-    });
+//Taki taki Rumba
+// Función para actualizar el rol de un usuario
+  Future<void> updateUserRole(String uid, String newRole) async {
+    try {
+      await _db.collection('usuarios').doc(uid).update({
+        'rol': newRole,
+      });
+    } catch (e) {
+      print("Error al actualizar el rol: $e");
+    }
   }
 
-  Future<void> addUser(String collection, Map<String, dynamic> data) {
-    return _firestore.collection(collection).add(data);
+  // Función para obtener todos los usuarios
+  Future<List<Usuario>> getAllUsers() async {
+    try {
+      QuerySnapshot snapshot = await _db.collection('usuarios').get();
+      return snapshot.docs.map((doc) => Usuario.fromMap(doc.data() as Map<String, dynamic>)).toList();
+    } catch (e) {
+      print("Error al obtener usuarios: $e");
+      return [];
+    }
   }
-
-  Future<void> updateUser(
-      String collection, String docId, Map<String, dynamic> data) {
-    return _firestore.collection(collection).doc(docId).update(data);
-  }
-
-  Future<void> deleteUser(String collection, String docId) {
-    return _firestore.collection(collection).doc(docId).delete();
-  }
-
 //Taki taki Rumba
 
   Stream <List<FloorModel>>obtenerPisos() {

@@ -1,97 +1,94 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:autopark_appmovil/models/usuario.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  //TakiTakiRumba
-
-  // Obtener el ID Token
-  Future<String?> getIdToken() async {
-    User? user = _firebaseAuth.currentUser;
-    return await user?.getIdToken();
-  }
-
-  // Obtener lista de usuarios
-  Future<void> fetchUsers() async {
-    String apiKey =
-        "AIzaSyATp65txvxEOTgyW-RRJ_rHJwM49a_U3R4"; // 🔹 Reemplaza con tu API Key de Firebase
-    String endpoint =
-        "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=$apiKey";
-
-    String? idToken = await getIdToken();
-    if (idToken == null) {
-      print("⚠️ No se pudo obtener el token del usuario.");
-      return;
-    }
-
-    var response = await http.post(
-      Uri.parse(endpoint),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"idToken": idToken}),
-    );
-
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      print("✅ Usuarios obtenidos: $data");
-    } else {
-      print("❌ Error al obtener usuarios: ${response.body}");
-    }
-  }
-  //TakiTakiRumba
-
-  // Iniciar sesión con Google
-  Future<UserCredential> signInWithGoogle() async {
+  // Registro con email y contraseña
+  Future<String?> signUp(String email, String password, String rol) async {
     try {
-      // 1. Mostrar el selector de cuentas
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-
-      if (googleUser == null) {
-        throw Exception('No se seleccionó ninguna cuenta');
-      }
-
-      // 2. Obtener los detalles de autenticación
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      // 3. Crear credenciales
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+      // Crear usuario en Firebase Authentication
+      UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
       );
 
-      // 4. Iniciar sesión en Firebase
-      return await _firebaseAuth.signInWithCredential(credential);
+      // Obtener UID
+      String uid = userCredential.user!.uid;
+
+      // Crear un objeto Usuario
+      Usuario usuario = Usuario(
+        uid: uid,
+        nombre: email.split('@')[0], // Usamos el nombre de usuario como ejemplo
+        email: email,
+        foto: '', // Podrías añadir una foto si es necesario
+        rol: rol, // Asignamos el rol (usuario o admin)
+      );
+
+      // Guardar usuario en Firestore
+      await _firestore.collection("usuarios").doc(uid).set(usuario.toMap());
+
+      return null; // Sin errores
     } catch (e) {
-      print('Error en Google Sign-In: $e');
-      rethrow;
+      return e.toString(); // Devuelve el error si ocurre
     }
+  }
+
+  // Inicio de sesión con email y contraseña
+  Future<String?> signInWithEmail(String email, String password) async {
+    try {
+      await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return null; // Sin errores
+    } catch (e) {
+      return e.toString(); // Devuelve el error si ocurre
+    }
+  }
+
+  // Obtener el estado actual del usuario
+  Stream<User?> get user {
+    return _firebaseAuth.authStateChanges();
+  }
+
+  // Guardar datos del usuario en Firestore
+  Future<void> saveUserData(User user) async {
+    Usuario usuario = Usuario(
+      uid: user.uid,
+      nombre: user.displayName ?? 'Sin nombre',
+      email: user.email ?? 'No proporcionado',
+      foto: user.photoURL ?? '',
+      rol: 'usuario', // Puedes asignar roles según tu lógica
+    );
+
+    await _firestore.collection("usuarios").doc(user.uid).set(usuario.toMap(), SetOptions(merge: true));
+  }
+
+  // Obtener usuario actual desde Firestore
+  Future<Usuario?> get currentUser async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null) return null;
+
+    final doc = await _firestore.collection("usuarios").doc(user.uid).get();
+    if (!doc.exists) return null;
+
+    return Usuario.fromMap(doc.data()!);
+  }
+
+  // Verificar si el usuario tiene un vehículo registrado
+  Future<bool> tieneVehiculoRegistrado(String uid) async {
+    final vehiculos = await _firestore
+        .collection("vehiculos")
+        .where("usuarioId", isEqualTo: uid)
+        .get();
+    return vehiculos.docs.isNotEmpty;
   }
 
   // Cerrar sesión
   Future<void> signOut() async {
-    await _googleSignIn.signOut(); // Cerrar sesión en Google
-    await _firebaseAuth.signOut(); // Cerrar sesión en Firebase
+    await _firebaseAuth.signOut();
   }
-
-  // Método para email/contraseña (opcional)
-  Future<UserCredential?> signInWithEmailAndPassword(
-    String email,
-    String password,
-  ) async {
-    try {
-      return await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on FirebaseAuthException catch (e) {
-      print('Error: ${e.message}');
-      return null;
-    }
-  }
-  //TakiTaki
-  // Obtener el ID Token del usuario autenticado
 }

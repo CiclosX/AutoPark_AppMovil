@@ -29,4 +29,6 @@ class RealtimeDbService {
       }
     });
   }
+
+  actualizarEstadoEspacio(String espacioId, String s) {}
 }

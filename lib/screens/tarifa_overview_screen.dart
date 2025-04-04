@@ -38,6 +38,7 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
+                  color: Colors.black87,
                 ),
               ),
               const SizedBox(height: 20),
@@ -69,7 +70,7 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Colors.blue[800],
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     shape: RoundedRectangleBorder(
@@ -116,6 +117,7 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
+                  color: Colors.black87,
                 ),
               ),
               const SizedBox(height: 20),
@@ -163,7 +165,7 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Colors.blue[800],
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 15),
                         shape: RoundedRectangleBorder(
@@ -191,7 +193,10 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Confirmar Eliminación"),
+          title: const Text(
+            "Confirmar Eliminación",
+            style: TextStyle(color: Colors.black87),
+          ),
           content: const Text(
               "¿Estás seguro de que deseas eliminar esta tarifa?"),
           shape: RoundedRectangleBorder(
@@ -218,17 +223,20 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: const Text(
           'Tarifas',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.blue[800],
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, size: 20),
+          icon: const Icon(Icons.arrow_back_ios, size: 20, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -247,78 +255,65 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
             return const Center(child: Text("No hay tarifas disponibles"));
           }
           
-          TarifaModel tarifa = snapshot.data!.first; // Tomamos la primera tarifa para mostrar
+          TarifaModel tarifa = snapshot.data!.first;
           
           return Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Tarifa Actual
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "La tarifa actual es de",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black87,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "La tarifa actual es de",
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey[800],
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "\$${tarifa.tarifa}",
-                              style: const TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
+                        const SizedBox(height: 10),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: "\$${tarifa.tarifa}",
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue[800],
+                                ),
                               ),
-                            ),
-                            const TextSpan(
-                              text: " / Hr.",
-                              style: TextStyle(
-                                fontSize: 22,
-                                color: Colors.blue,
+                              TextSpan(
+                                text: " / Hr.",
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  color: Colors.blue[800],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 
                 // Sección de pestañas
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -335,7 +330,7 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               decoration: BoxDecoration(
                                 color: _activeTab == 'Precio'
-                                    ? Colors.blue
+                                    ? Colors.blue[800]
                                     : Colors.transparent,
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -364,7 +359,7 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               decoration: BoxDecoration(
                                 color: _activeTab == 'Tiempo'
-                                    ? Colors.blue
+                                    ? Colors.blue[800]
                                     : Colors.transparent,
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -395,57 +390,23 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       TarifaModel tarifa = snapshot.data![index];
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.03),
-                              blurRadius: 8,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
+                      return Card(
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         child: ListTile(
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           leading: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              GestureDetector(
-                                onTap: () => _editarTarifa(tarifa),
-                                child: Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.blue,
-                                  ),
-                                  child: const Icon(
-                                    Icons.edit,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                ),
+                              IconButton(
+                                icon: const Icon(Icons.edit, color: Colors.blue),
+                                onPressed: () => _editarTarifa(tarifa),
                               ),
-                              const SizedBox(width: 8),
-                              GestureDetector(
-                                onTap: () => _eliminarTarifa(tarifa),
-                                child: Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.red[50],
-                                    border: Border.all(color: Colors.red[100]!),
-                                  ),
-                                  child: Icon(
-                                    Icons.delete_outline,
-                                    color: Colors.red[400],
-                                    size: 20,
-                                  ),
-                                ),
+                              IconButton(
+                                icon: const Icon(Icons.delete, color: Colors.red),
+                                onPressed: () => _eliminarTarifa(tarifa),
                               ),
                             ],
                           ),
@@ -453,16 +414,17 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
                             padding: const EdgeInsets.only(left: 8.0),
                             child: Text(
                               "\$${tarifa.tarifa.toStringAsFixed(2)}",
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
+                                color: Colors.grey[800],
                               ),
                             ),
                           ),
-                          trailing: const Text(
+                          trailing: Text(
                             "Hora",
                             style: TextStyle(
-                              color: Colors.grey,
+                              color: Colors.grey[600],
                             ),
                           ),
                         ),
@@ -477,23 +439,11 @@ class _TarifaOverviewScreenState extends State<TarifaOverviewScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _agregarTarifa,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.blue[800],
         elevation: 4,
-        child: Container(
-          width: 56,
-          height: 56,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.blue[300]!, Colors.blue[700]!],
-            ),
-          ),
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
         ),
       ),
     );

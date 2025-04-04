@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:autopark_appmovil/services/realtime_db_services.dart';
 import 'package:provider/provider.dart';
-import 'package:autopark_appmovil/screens/reservas_screen.dart'; // Asegúrate de importar tu pantalla de reservas
+import 'package:autopark_appmovil/screens/reservas_screen.dart';
+import 'package:autopark_appmovil/screens/pago_qr_screen.dart';
+import 'package:intl/intl.dart';
 
 class ParkingScreen extends StatelessWidget {
   final String espacioId;
   final String espacioNombre;
+  final double tarifaPorHora;
 
   const ParkingScreen({
     super.key, 
     required this.espacioId, 
-    required this.espacioNombre
+    required this.espacioNombre,
+    this.tarifaPorHora = 5.0, // Valor por defecto, ajusta según necesites
   });
 
   @override
   Widget build(BuildContext context) {
     final realtimeDbService = Provider.of<RealtimeDbService>(context);
+    final horaInicio = DateTime.now(); // Obtén este valor de donde corresponda
 
     return Scaffold(
       appBar: AppBar(
@@ -74,7 +79,7 @@ class ParkingScreen extends StatelessWidget {
                   const SizedBox(height: 10),
                   Text(
                     ultimaFecha != null
-                        ? 'Última actualización: ${ultimaFecha.toLocal()}'
+                        ? 'Última actualización: ${DateFormat('dd/MM/yyyy HH:mm').format(ultimaFecha.toLocal())}'
                         : 'Última actualización: desconocida',
                     style: TextStyle(
                       color: Colors.grey[600],
@@ -128,6 +133,39 @@ class ParkingScreen extends StatelessWidget {
                     ),
                     child: const Text(
                       'Reservas',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PagoQrScreen(
+                            tarifaPorHora: tarifaPorHora,
+                            espacioNombre: espacioNombre,
+                            horaInicio: horaInicio,
+                          ),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green[800],
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12, 
+                        horizontal: 20
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                    child: const Text(
+                      'Pago',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
