@@ -1,5 +1,7 @@
+import 'package:autopark_appmovil/screens/pago_qr_screen.dart' show PagoQrScreen;
 import 'package:flutter/material.dart';
 import 'package:autopark_appmovil/services/realtime_db_services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:autopark_appmovil/screens/reservas_screen.dart';
 import 'package:autopark_appmovil/providers/theme_provider.dart';
@@ -7,12 +9,16 @@ import 'package:autopark_appmovil/providers/theme_provider.dart';
 class ParkingScreen extends StatelessWidget {
   final String espacioId;
   final String espacioNombre;
+  final double tarifaPorHora;
 
   const ParkingScreen({
     super.key, 
     required this.espacioId, 
-    required this.espacioNombre
+    required this.espacioNombre,
+    this.tarifaPorHora = 5.0, // Valor por defecto, ajusta según necesites
   });
+  
+  get horaInicio => null;
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +101,7 @@ class ParkingScreen extends StatelessWidget {
                   const SizedBox(height: 10),
                   Text(
                     ultimaFecha != null
-                        ? 'Última actualización: ${ultimaFecha.toLocal()}'
+                        ? 'Última actualización: ${DateFormat('dd/MM/yyyy HH:mm').format(ultimaFecha.toLocal())}'
                         : 'Última actualización: desconocida',
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
@@ -123,6 +129,39 @@ class ParkingScreen extends StatelessWidget {
                         ),
                       );
                     },
+                  ),
+                  const SizedBox(height: 15),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PagoQrScreen(
+                            tarifaPorHora: tarifaPorHora,
+                            espacioNombre: espacioNombre,
+                            horaInicio: horaInicio,
+                          ),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green[800],
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12, 
+                        horizontal: 20
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                    child: const Text(
+                      'Pago',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ],
               ),
