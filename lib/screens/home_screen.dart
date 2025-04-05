@@ -1,3 +1,4 @@
+import 'package:autopark_appmovil/screens/tarifa_overview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,7 +8,7 @@ import '../screens/floor_overview_screen.dart';
 import '../screens/mis_vehiculos_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/recuperardatos_reservas.dart';
-import '../screens/tarifa_overview_screen.dart';
+//import '../screens/tarifa_overview_screen.dart';
 import '../screens/users_screen.dart';
 import '../services/auth_services.dart';
 import '../providers/theme_provider.dart';

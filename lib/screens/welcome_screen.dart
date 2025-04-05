@@ -1,3 +1,4 @@
+import 'package:autopark_appmovil/screens/auth_scren.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:autopark_appmovil/providers/theme_provider.dart';
@@ -115,7 +116,10 @@ class WelcomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/home');
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AuthScreen()),
+                      );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,

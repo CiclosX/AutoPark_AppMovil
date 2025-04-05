@@ -419,7 +419,11 @@ class _AuthScreenState extends State<AuthScreen> {
                           const SizedBox(height: 16),
                           ElevatedButton.icon(
                             onPressed: _signInWithGoogle,
-                            icon: const Icon(Icons.login),
+                            icon: Image.asset(
+                              'assets/img/google-logo.png',
+                              height: 24,
+                              width: 24,
+                            ),
                             label: const Text('Iniciar sesión con Google'),
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(double.infinity, 50),

@@ -127,7 +127,7 @@ class _MisVehiculosScreenState extends State<MisVehiculosScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Mis Vehículos", style: TextStyle(color: Colors.white)),
+        title: const Text("Mi Vehículo", style: TextStyle(color: Colors.white)),
         backgroundColor: primaryColor,
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
