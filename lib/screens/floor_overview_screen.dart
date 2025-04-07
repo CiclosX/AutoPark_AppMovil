@@ -234,7 +234,7 @@ class _FloorOverviewScreenState extends State<FloorOverviewScreen> {
             children: [
               Row(
                 children: [
-                  Icon(Icons.location_on, color: theme.primaryColor, size: 40),
+                  Icon(Icons.location_on, color: Colors.blue[800], size: 40),
                   const SizedBox(width: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,7 +259,7 @@ class _FloorOverviewScreenState extends State<FloorOverviewScreen> {
               Row(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.edit, color: theme.primaryColor),
+                    icon: Icon(Icons.edit, color: Colors.blue[800]),
                     onPressed: () => _editarPiso(piso),
                   ),
                   IconButton(
