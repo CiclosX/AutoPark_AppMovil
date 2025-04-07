@@ -1,4 +1,4 @@
-import 'package:autopark_appmovil/screens/home_screens.dart';
+import 'package:autopark_appmovil/screens/home_screen.dart';
 import 'package:autopark_appmovil/services/vehiculos_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +52,7 @@ class _RegistroVehiculoScreenState extends State<RegistroVehiculoScreen> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
     final primaryColor = isDarkMode ? Colors.blue[900] : Colors.blue[800];
-    Theme.of(context);
+    //final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(

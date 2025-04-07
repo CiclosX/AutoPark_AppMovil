@@ -146,7 +146,7 @@ class ParkingScreen extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green[800],
+                      backgroundColor: primaryColor ?? Colors.blue,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                         vertical: 12, 

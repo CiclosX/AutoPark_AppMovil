@@ -1,3 +1,4 @@
+import 'package:autopark_appmovil/screens/auth_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:autopark_appmovil/providers/theme_provider.dart';
@@ -18,13 +19,10 @@ class WelcomeScreen extends StatelessWidget {
 
     return Scaffold(
       body: Stack(
+        fit: StackFit.expand,
         children: [
-          // Imagen de fondo superior (coches estacionados)
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: MediaQuery.of(context).size.height * 0.4,
+          // Imagen de fondo
+          Positioned.fill(
             child: Image.asset(
               'assets/img/fondito.jpg',
               fit: BoxFit.cover,
@@ -33,30 +31,32 @@ class WelcomeScreen extends StatelessWidget {
             ),
           ),
 
-          // Contenedor con forma de onda azul
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.35,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: ClipPath(
-              clipper: WaveClipper(),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: waveColor,
-                ),
-              ),
-            ),
-          ),
+          // Curva azul en la parte superior
+// Curva azul en la parte inferior con forma superior
+Positioned(
+  top: MediaQuery.of(context).size.height * 0.3,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  child: ClipPath(
+    clipper: WaveClipper(),
+    child: Container(
+      decoration: BoxDecoration(
+        color: waveColor,
+      ),
+    ),
+  ),
+),
 
-          // Contenido principal (logo, texto y botón)
+
+          // Contenido principal
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Espacio para que el contenido caiga debajo de la imagen
+              // Espacio para dejar la curva arriba
               SizedBox(height: MediaQuery.of(context).size.height * 0.35),
 
-              // Logo de estacionamiento
+              // Logo
               Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Container(
@@ -66,8 +66,8 @@ class WelcomeScreen extends StatelessWidget {
                     color: isDark ? Colors.blue[800] : Colors.blue[700],
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: isDark ? Colors.blue[200]! : Colors.white, 
-                      width: 2
+                      color: isDark ? Colors.blue[200]! : Colors.white,
+                      width: 2,
                     ),
                     boxShadow: [
                       BoxShadow(
@@ -86,8 +86,9 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
 
-              // Mensaje de bienvenida
               const SizedBox(height: 24),
+
+              // Texto de bienvenida
               Text(
                 'Bienvenido',
                 style: theme.textTheme.headlineMedium?.copyWith(
@@ -96,7 +97,6 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
 
-              // Nombre de usuario (si lo necesitas)
               if (userName.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 Text(
@@ -107,7 +107,6 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ],
 
-              // Espacio antes del botón
               const SizedBox(height: 50),
 
               // Botón de entrar
@@ -115,7 +114,10 @@ class WelcomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/home');
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AuthScreen()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
@@ -135,8 +137,9 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
 
-              // Botón para cambiar tema (opcional)
               const SizedBox(height: 20),
+
+              // Botón de cambio de tema
               IconButton(
                 icon: Icon(
                   isDark ? Icons.light_mode : Icons.dark_mode,
@@ -156,35 +159,24 @@ class WelcomeScreen extends StatelessWidget {
   }
 }
 
-// Clase para crear la forma de onda (sin cambios)
+// Curva superior personalizada
 class WaveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-    path.lineTo(0, size.height);
+    path.lineTo(0, 0); // Esquina superior izquierda
+
+    // Curva hacia abajo en la parte superior
+    path.quadraticBezierTo(
+      size.width / 2, size.height * 0.5, // Punto de control (centro abajo)
+      size.width, 0, // Termina arriba derecha
+    );
+
+    // Lados y parte inferior
     path.lineTo(size.width, size.height);
-    path.lineTo(size.width, 0);
-
-    // Creando la forma de onda
-    final firstControlPoint = Offset(size.width * 0.7, size.height * 0.15);
-    final firstEndPoint = Offset(size.width * 0.5, size.height * 0.2);
-    path.quadraticBezierTo(
-      firstControlPoint.dx, 
-      firstControlPoint.dy,
-      firstEndPoint.dx, 
-      firstEndPoint.dy
-    );
-
-    final secondControlPoint = Offset(size.width * 0.3, size.height * 0.25);
-    const secondEndPoint = Offset(0, 0);
-    path.quadraticBezierTo(
-      secondControlPoint.dx, 
-      secondControlPoint.dy, 
-      secondEndPoint.dx, 
-      secondEndPoint.dy
-    );
-    
+    path.lineTo(0, size.height);
     path.close();
+
     return path;
   }
 

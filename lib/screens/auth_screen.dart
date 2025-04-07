@@ -1,3 +1,4 @@
+import 'package:autopark_appmovil/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -30,9 +31,10 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
-  void _signIn() async {
+  // Método corregido para iniciar sesión
+  Future<void> _signIn() async {
     if (!_termsAccepted) {
-      setState(() => _errorMessage = 'Debes aceptar los términos y condiciones primero');
+      setState(() => _errorMessage = 'Debes aceptar los términos y condiciones');
       return;
     }
 
@@ -41,97 +43,147 @@ class _AuthScreenState extends State<AuthScreen> {
 
     if (email.isEmpty || password.isEmpty) {
       setState(() => _errorMessage = 'Por favor, ingresa ambos campos.');
-      return;
-    }
-
-    setState(() => _isLoading = true);
-    
-    String? error = await _authService.signInWithEmail(email, password);
-    
-    setState(() => _isLoading = false);
-    
-    if (error == null) {
-      _navigateToRegistroVehiculo();
-    } else {
-      setState(() => _errorMessage = error);
-    }
-  }
-
-  void _signUp() async {
-    if (!_termsAccepted) {
-      setState(() => _errorMessage = 'Debes aceptar los términos y condiciones primero');
-      return;
-    }
-
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
-
-    if (email.isEmpty || password.isEmpty) {
-      setState(() => _errorMessage = 'Por favor, ingresa ambos campos.');
-      return;
-    }
-
-    setState(() => _isLoading = true);
-    
-    String? error = await _authService.signUp(email, password, 'usuario');
-    
-    setState(() => _isLoading = false);
-    
-    if (error == null) {
-      _navigateToRegistroVehiculo();
-    } else {
-      setState(() => _errorMessage = error);
-    }
-  }
-
-  Future<void> _signInWithGoogle() async {
-    if (!_termsAccepted) {
-      setState(() => _errorMessage = 'Debes aceptar los términos y condiciones primero');
       return;
     }
 
     setState(() => _isLoading = true);
 
     try {
-      final GoogleSignIn googleSignIn = GoogleSignIn();
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      String? error = await _authService.signInWithEmail(email, password);
+
+      if (error == null) {
+        final User? user = FirebaseAuth.instance.currentUser;
+
+        if (user != null) {
+          final QuerySnapshot vehiculosSnapshot = await FirebaseFirestore.instance
+              .collection("vehiculos")
+              .where("usuarioId", isEqualTo: user.uid)
+              .get();
+
+          if (!mounted) return;
+          setState(() => _isLoading = false);
+
+          if (vehiculosSnapshot.docs.isEmpty) {
+            _navigateToRegistroVehiculo();
+          } else {
+            // Navegación corregida (usa MaterialPageRoute como alternativa)
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()), // Asegúrate de importar HomeScreen
+            );
+            // O si prefieres rutas con nombre:
+            // Navigator.pushReplacementNamed(context, '/home');
+          }
+        }
+      } else {
+        if (!mounted) return;
+        setState(() {
+          _isLoading = false;
+          _errorMessage = error;
+        });
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Error inesperado: ${e.toString()}';
+      });
+    }
+  }
+
+  // Método para registro (ya estaba correcto)
+  void _signUp() async {
+    if (!_termsAccepted) {
+      setState(() => _errorMessage = 'Debes aceptar los términos y condiciones');
+      return;
+    }
+
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      setState(() => _errorMessage = 'Por favor, ingresa ambos campos.');
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    
+    try {
+      String? error = await _authService.signUp(email, password, 'usuario');
+      
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      
+      if (error == null) {
+        _navigateToRegistroVehiculo();
+      } else {
+        setState(() => _errorMessage = error);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Error en registro: ${e.toString()}';
+      });
+    }
+  }
+
+  // Google Sign-In (corregido)
+  Future<void> _signInWithGoogle() async {
+    if (!_termsAccepted) {
+      setState(() => _errorMessage = 'Debes aceptar los términos y condiciones');
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) {
+        if (!mounted) return;
         setState(() => _isLoading = false);
         return;
       }
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
+      final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-      final User? user = userCredential.user;
+      final UserCredential userCredential = 
+          await FirebaseAuth.instance.signInWithCredential(credential);
 
-      if (user != null) {
-        await _authService.saveUserData(user);
+      if (userCredential.user != null) {
+        await _authService.saveUserData(userCredential.user!);
 
         final QuerySnapshot vehiculosSnapshot = await FirebaseFirestore.instance
             .collection("vehiculos")
-            .where("usuarioId", isEqualTo: user.uid)
+            .where("usuarioId", isEqualTo: userCredential.user!.uid)
             .get();
 
+        if (!mounted) return;
         setState(() => _isLoading = false);
 
         if (vehiculosSnapshot.docs.isEmpty) {
           _navigateToRegistroVehiculo();
         } else {
-          Navigator.pushReplacementNamed(context, '/home');
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
         }
       }
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         _isLoading = false;
-        _errorMessage = 'Error al iniciar sesión con Google: $e';
+        _errorMessage = 'Error con Google: ${e.toString()}';
       });
     }
   }
+
+
 
   void _showTermsDialog() {
     showDialog(
@@ -191,7 +243,8 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
-    final primaryColor = isDarkMode ? Colors.blue[900] : Colors.blue[800];
+    // Definimos el color azul principal
+    final primaryColor = Colors.blue;
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -211,7 +264,7 @@ class _AuthScreenState extends State<AuthScreen> {
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(
-                color: theme.primaryColor,
+                color: primaryColor,
               ),
             )
           : SingleChildScrollView(
@@ -230,13 +283,14 @@ class _AuthScreenState extends State<AuthScreen> {
                       child: Column(
                         children: [
                           Icon(Icons.account_circle, 
-                              color: theme.primaryColor, 
+                              color: primaryColor, 
                               size: 60),
                           const SizedBox(height: 20),
                           Text(
                             _isSignIn ? 'Iniciar Sesión' : 'Crear Cuenta',
                             style: theme.textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
+                              color: primaryColor,
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -251,9 +305,14 @@ class _AuthScreenState extends State<AuthScreen> {
                                 color: isDarkMode ? Colors.grey[500] : null),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(color: primaryColor),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(color: primaryColor, width: 2),
                               ),
                               prefixIcon: Icon(Icons.email, 
-                                  color: theme.primaryColor),
+                                  color: primaryColor),
                               filled: isDarkMode,
                               fillColor: isDarkMode ? Colors.grey[700] : null,
                             ),
@@ -273,9 +332,14 @@ class _AuthScreenState extends State<AuthScreen> {
                                 color: isDarkMode ? Colors.grey[500] : null),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(color: primaryColor),
                               ),
-                              prefixIcon: Icon(Icons.lock, 
-                                  color: theme.primaryColor),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(color: primaryColor, width: 2),
+                              ),
+                              prefixIcon: Icon(Icons.lock,
+                                  color: primaryColor),
                               filled: isDarkMode,
                               fillColor: isDarkMode ? Colors.grey[700] : null,
                             ),
@@ -320,7 +384,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                   onChanged: (value) {
                                     setState(() => _termsAccepted = value ?? false);
                                   },
-                                  activeColor: theme.primaryColor,
+                                  activeColor: primaryColor,
                                 ),
                               ),
                               Expanded(
@@ -337,7 +401,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                         TextSpan(
                                           text: 'Términos y Condiciones',
                                           style: TextStyle(
-                                            color: theme.primaryColor,
+                                            color: primaryColor,
                                             decoration: TextDecoration.underline,
                                           ),
                                         ),
@@ -345,7 +409,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                         TextSpan(
                                           text: 'Política de Privacidad',
                                           style: TextStyle(
-                                            color: theme.primaryColor,
+                                            color: primaryColor,
                                             decoration: TextDecoration.underline,
                                           ),
                                         ),
@@ -360,7 +424,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           ElevatedButton(
                             onPressed: _isSignIn ? _signIn : _signUp,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: theme.primaryColor,
+                              backgroundColor: primaryColor,
                               foregroundColor: Colors.white,
                               minimumSize: const Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(
@@ -379,7 +443,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             },
                             child: Text(
                               _isSignIn ? '¿No tienes cuenta? Crea una' : '¿Ya tienes cuenta? Inicia sesión',
-                              style: TextStyle(color: theme.primaryColor),
+                              style: TextStyle(color: primaryColor),
                             ),
                           ),
                         ],
@@ -407,7 +471,11 @@ class _AuthScreenState extends State<AuthScreen> {
                           const SizedBox(height: 16),
                           ElevatedButton.icon(
                             onPressed: _signInWithGoogle,
-                            icon: const Icon(Icons.login),
+                            icon: Image.asset(
+                              'assets/img/google-logo.png',
+                              height: 24,
+                              width: 24,
+                            ),
                             label: const Text('Iniciar sesión con Google'),
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(double.infinity, 50),
