@@ -1,3 +1,4 @@
+import 'package:autopark_appmovil/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -30,9 +31,10 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
-  void _signIn() async {
+  // Método corregido para iniciar sesión
+  Future<void> _signIn() async {
     if (!_termsAccepted) {
-      setState(() => _errorMessage = 'Debes aceptar los términos y condiciones primero');
+      setState(() => _errorMessage = 'Debes aceptar los términos y condiciones');
       return;
     }
 
@@ -41,97 +43,147 @@ class _AuthScreenState extends State<AuthScreen> {
 
     if (email.isEmpty || password.isEmpty) {
       setState(() => _errorMessage = 'Por favor, ingresa ambos campos.');
-      return;
-    }
-
-    setState(() => _isLoading = true);
-    
-    String? error = await _authService.signInWithEmail(email, password);
-    
-    setState(() => _isLoading = false);
-    
-    if (error == null) {
-      _navigateToRegistroVehiculo();
-    } else {
-      setState(() => _errorMessage = error);
-    }
-  }
-
-  void _signUp() async {
-    if (!_termsAccepted) {
-      setState(() => _errorMessage = 'Debes aceptar los términos y condiciones primero');
-      return;
-    }
-
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
-
-    if (email.isEmpty || password.isEmpty) {
-      setState(() => _errorMessage = 'Por favor, ingresa ambos campos.');
-      return;
-    }
-
-    setState(() => _isLoading = true);
-    
-    String? error = await _authService.signUp(email, password, 'usuario');
-    
-    setState(() => _isLoading = false);
-    
-    if (error == null) {
-      _navigateToRegistroVehiculo();
-    } else {
-      setState(() => _errorMessage = error);
-    }
-  }
-
-  Future<void> _signInWithGoogle() async {
-    if (!_termsAccepted) {
-      setState(() => _errorMessage = 'Debes aceptar los términos y condiciones primero');
       return;
     }
 
     setState(() => _isLoading = true);
 
     try {
-      final GoogleSignIn googleSignIn = GoogleSignIn();
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      String? error = await _authService.signInWithEmail(email, password);
+
+      if (error == null) {
+        final User? user = FirebaseAuth.instance.currentUser;
+
+        if (user != null) {
+          final QuerySnapshot vehiculosSnapshot = await FirebaseFirestore.instance
+              .collection("vehiculos")
+              .where("usuarioId", isEqualTo: user.uid)
+              .get();
+
+          if (!mounted) return;
+          setState(() => _isLoading = false);
+
+          if (vehiculosSnapshot.docs.isEmpty) {
+            _navigateToRegistroVehiculo();
+          } else {
+            // Navegación corregida (usa MaterialPageRoute como alternativa)
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()), // Asegúrate de importar HomeScreen
+            );
+            // O si prefieres rutas con nombre:
+            // Navigator.pushReplacementNamed(context, '/home');
+          }
+        }
+      } else {
+        if (!mounted) return;
+        setState(() {
+          _isLoading = false;
+          _errorMessage = error;
+        });
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Error inesperado: ${e.toString()}';
+      });
+    }
+  }
+
+  // Método para registro (ya estaba correcto)
+  void _signUp() async {
+    if (!_termsAccepted) {
+      setState(() => _errorMessage = 'Debes aceptar los términos y condiciones');
+      return;
+    }
+
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      setState(() => _errorMessage = 'Por favor, ingresa ambos campos.');
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    
+    try {
+      String? error = await _authService.signUp(email, password, 'usuario');
+      
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      
+      if (error == null) {
+        _navigateToRegistroVehiculo();
+      } else {
+        setState(() => _errorMessage = error);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Error en registro: ${e.toString()}';
+      });
+    }
+  }
+
+  // Google Sign-In (corregido)
+  Future<void> _signInWithGoogle() async {
+    if (!_termsAccepted) {
+      setState(() => _errorMessage = 'Debes aceptar los términos y condiciones');
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) {
+        if (!mounted) return;
         setState(() => _isLoading = false);
         return;
       }
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
+      final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-      final User? user = userCredential.user;
+      final UserCredential userCredential = 
+          await FirebaseAuth.instance.signInWithCredential(credential);
 
-      if (user != null) {
-        await _authService.saveUserData(user);
+      if (userCredential.user != null) {
+        await _authService.saveUserData(userCredential.user!);
 
         final QuerySnapshot vehiculosSnapshot = await FirebaseFirestore.instance
             .collection("vehiculos")
-            .where("usuarioId", isEqualTo: user.uid)
+            .where("usuarioId", isEqualTo: userCredential.user!.uid)
             .get();
 
+        if (!mounted) return;
         setState(() => _isLoading = false);
 
         if (vehiculosSnapshot.docs.isEmpty) {
           _navigateToRegistroVehiculo();
         } else {
-          Navigator.pushReplacementNamed(context, '/home');
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
         }
       }
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         _isLoading = false;
-        _errorMessage = 'Error al iniciar sesión con Google: $e';
+        _errorMessage = 'Error con Google: ${e.toString()}';
       });
     }
   }
+
+
 
   void _showTermsDialog() {
     showDialog(

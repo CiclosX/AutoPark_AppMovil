@@ -1,4 +1,4 @@
-import 'package:autopark_appmovil/screens/auth_scren.dart';
+import 'package:autopark_appmovil/screens/auth_screen.dart';
 import 'package:autopark_appmovil/screens/home_screen.dart';
 import 'package:autopark_appmovil/screens/welcome_screen.dart';
 import 'package:autopark_appmovil/services/realtime_db_services.dart';

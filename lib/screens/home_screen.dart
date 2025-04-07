@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/usuario.dart';
-import '../screens/auth_scren.dart';
+import 'auth_screen.dart';
 import '../screens/floor_overview_screen.dart';
 import '../screens/mis_vehiculos_screen.dart';
 import '../screens/profile_screen.dart';

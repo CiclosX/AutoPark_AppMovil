@@ -56,16 +56,25 @@ class AuthService {
 
   // Guardar datos del usuario en Firestore
   Future<void> saveUserData(User user) async {
-    Usuario usuario = Usuario(
-      uid: user.uid,
-      nombre: user.displayName ?? 'Sin nombre',
-      email: user.email ?? 'No proporcionado',
-      foto: user.photoURL ?? '',
-      rol: 'usuario', // Puedes asignar roles según tu lógica
-    );
+  DocumentReference docRef = _firestore.collection("usuarios").doc(user.uid);
+  DocumentSnapshot doc = await docRef.get();
 
-    await _firestore.collection("usuarios").doc(user.uid).set(usuario.toMap(), SetOptions(merge: true));
+  String rol = 'usuario';
+  if (doc.exists) {
+    rol = (doc.data() as Map<String, dynamic>)['rol'] ?? 'usuario';
   }
+
+  Usuario usuario = Usuario(
+    uid: user.uid,
+    nombre: user.displayName ?? 'Sin nombre',
+    email: user.email ?? 'No proporcionado',
+    foto: user.photoURL ?? '',
+    rol: rol,
+  );
+
+  await docRef.set(usuario.toMap(), SetOptions(merge: true));
+}
+
 
   // Obtener usuario actual desde Firestore
   Future<Usuario?> get currentUser async {

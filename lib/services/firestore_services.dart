@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FirestoreServices {
   static final FirestoreServices _instance = FirestoreServices._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   factory FirestoreServices() {
     return _instance;
@@ -18,7 +17,7 @@ class FirestoreServices {
 // Función para actualizar el rol de un usuario
   Future<void> updateUserRole(String uid, String newRole) async {
     try {
-      await _db.collection('usuarios').doc(uid).update({
+      await _firestore.collection('usuarios').doc(uid).update({
         'rol': newRole,
       });
     } catch (e) {
@@ -29,7 +28,7 @@ class FirestoreServices {
   // Función para obtener todos los usuarios
   Future<List<Usuario>> getAllUsers() async {
     try {
-      QuerySnapshot snapshot = await _db.collection('usuarios').get();
+      QuerySnapshot snapshot = await _firestore.collection('usuarios').get();
       return snapshot.docs.map((doc) => Usuario.fromMap(doc.data() as Map<String, dynamic>)).toList();
     } catch (e) {
       print("Error al obtener usuarios: $e");
