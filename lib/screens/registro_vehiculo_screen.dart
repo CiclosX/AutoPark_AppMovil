@@ -52,7 +52,7 @@ class _RegistroVehiculoScreenState extends State<RegistroVehiculoScreen> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
     final primaryColor = isDarkMode ? Colors.blue[900] : Colors.blue[800];
-    final theme = Theme.of(context);
+    Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(

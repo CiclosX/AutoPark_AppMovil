@@ -1,4 +1,4 @@
-import 'package:autopark_appmovil/screens/pago_qr_screen.dart' show PagoQrScreen;
+import 'package:autopark_appmovil/screens/pago_qr_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:autopark_appmovil/services/realtime_db_services.dart';
 import 'package:intl/intl.dart';
@@ -15,10 +15,8 @@ class ParkingScreen extends StatelessWidget {
     super.key, 
     required this.espacioId, 
     required this.espacioNombre,
-    this.tarifaPorHora = 5.0, // Valor por defecto, ajusta según necesites
+    this.tarifaPorHora = 8.0,
   });
-  
-  get horaInicio => null;
 
   @override
   Widget build(BuildContext context) {
@@ -133,6 +131,9 @@ class ParkingScreen extends StatelessWidget {
                   const SizedBox(height: 15),
                   ElevatedButton(
                     onPressed: () {
+                      // Usamos la hora actual como hora de inicio
+                      final horaInicio = DateTime.now();
+                      
                       Navigator.push(
                         context,
                         MaterialPageRoute(
